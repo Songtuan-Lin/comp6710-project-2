@@ -4,6 +4,6 @@ public class B {
 
     public String toString()
     {
-        return "B" + "b";
+        return "B" + "b" + "c";
     }
 }
