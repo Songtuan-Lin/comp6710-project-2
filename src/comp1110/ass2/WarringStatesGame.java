@@ -53,8 +53,23 @@ public class WarringStatesGame {
         return false;
     }
 
+    /* pick only the card that occurs at the end of the line else not legal */
+    public static boolean isFarthestCard(String placement, int zhangLoc, int LocationCoor)
+    {
+        return true;
+    }
 
+    /* Get the kingdom of the card based on it's location and the string placement*/
+    public static char getKingdom(char location, String placement)
+    {
+        return 'a';
+    }
 
+    /* check if other the same kingdom occurs based on the selection*/
+    public static boolean isSameKingdom()
+    {
+        return true;
+    }
     /**
      * Determine whether a move sequence is valid.
      * To be valid, the move sequence must be comprised of 1..N location characters
