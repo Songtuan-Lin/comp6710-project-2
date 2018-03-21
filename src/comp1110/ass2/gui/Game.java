@@ -17,5 +17,20 @@ public class Game extends Application {
     public void start(Stage primaryStage) throws Exception {
 
     }
-}
 
+
+    public static void winner() {
+        //count the number of flags and cards of each player, decide who is the winner
+    }
+
+    public void setup() {
+        //check if the placement is valid and  make it visible
+    }
+
+    public void nextStep() {
+        //decide who's turn to play
+        //decide if the move is legal
+        //decide cards and flags collected for each player
+        //decide if the game has ended and who wins
+    }
+}

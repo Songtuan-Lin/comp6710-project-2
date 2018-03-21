@@ -17,6 +17,7 @@ public class WarringStatesGame {
      */
     static boolean isCardPlacementWellFormed(String cardPlacement) {
         // FIXME Task 2: determine whether a card placement is well-formed
+
         return false;
     }
 
@@ -51,6 +52,8 @@ public class WarringStatesGame {
         // FIXME Task 5: determine whether a given move is legal
         return false;
     }
+
+
 
     /**
      * Determine whether a move sequence is valid.

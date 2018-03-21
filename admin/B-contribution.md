@@ -1,7 +1,7 @@
 We declare that the work toward our submission of Stage B was distributed among the group members as follows:
 
-* u2345678 30
-* u3456789 40
-* u0234567 30
+* u6528982 30
+* u6162630 35
+* u6275198 35
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0234567)
+Signed: Jiajia Xu (u6528982), Songtuan Lin (u6162630), and John Rufus Raja(u6275198)
