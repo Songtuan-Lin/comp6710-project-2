@@ -85,7 +85,19 @@ public class WarringStatesGame {
         // FIXME Task 6: determine whether a placement sequence is valid
         return false;
     }
+    static void createMatrix(String placement){
+        //create  matrix for the game board with input placement string
 
+    }
+    static String matrixtoString(){
+        //covert the board matrix back to placement string
+    return "adw";
+    }
+    static void oneMove(char charLocation, String placement, String[][] boardMatrix)
+    {
+        // update the boardMatrix with input of move and current placement
+
+    }
     /**
      * Get the list of supporters for the chosen player, given the provided
      * setup and move sequence.
