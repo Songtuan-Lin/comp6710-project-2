@@ -98,6 +98,13 @@ public class WarringStatesGame {
         // update the boardMatrix with input of move and current placement
 
     }
+
+    //transform the char location to index in 2-D matrix
+    static int[] transformCor(char locationChar)
+    {
+        int cor[] = new int[2];
+        return cor;
+    }
     /**
      * Get the list of supporters for the chosen player, given the provided
      * setup and move sequence.
@@ -114,6 +121,14 @@ public class WarringStatesGame {
         // FIXME Task 7: get the list of supporters for a given player after a sequence of moves
         return null;
     }
+
+    //finish one move and collect the corresponding card
+    static Player oneMove(char charLOcation, String placement, String[][] boardMatrix, Player player)
+    {
+        return player;
+    }
+
+
 
     /**
      * Given a setup and move sequence, determine which player controls the flag of each kingdom

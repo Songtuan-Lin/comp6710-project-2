@@ -35,7 +35,7 @@
 - Lian Po 廉頗
 
 ## Han 韓
-- Marquess Ai 韩哀侯
+- Marquess Ai 韩哀侯趙姬
 - King Huanhui 桓惠王
 - King An 安王
 - Han Fei 韓非
