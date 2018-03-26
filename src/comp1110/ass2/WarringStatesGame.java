@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import java.util.List;
+
 /**
  * This class provides the text interface for the Warring States game
  */
@@ -17,9 +19,68 @@ public class WarringStatesGame {
      */
     static boolean isCardPlacementWellFormed(String cardPlacement) {
         // FIXME Task 2: determine whether a card placement is well-formed
+        if(cardPlacement.length()!=3){
+            return false;
+        }
+        if( ! ( ( cardPlacement.charAt(0)>='a'&& cardPlacement.charAt(0)<='g') || ( cardPlacement.charAt(0)=='z') )  ){
+            return false;
+        }
 
-        return false;
+        switch(cardPlacement.charAt(0)){
+                case 'a':
+                    if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'7'){
+                        return false;
+                        }
+                    break;
+                case 'b':
+                    if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'6'){
+                        return false;
+                    }
+                    break;
+                case 'c':
+                    if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'5'){
+                        return false;
+                    }
+                    break;
+                case 'd':
+                    if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'4'){
+                        return false;
+                    }
+                    break;
+                case 'e':
+                    if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'3'){
+                        return false;
+                    }
+                    break;
+                case 'f':
+                    if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'2'){
+                        return false;
+                    }
+                    break;
+                case 'g':
+                    if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'1'){
+                        return false;
+                    }
+                    break;
+                case 'z':
+                    if(cardPlacement.charAt(1)!='9'){
+                        return false;
+                    }
+                    break;
+            }
+
+        if(! ( (cardPlacement.charAt(2)>='A'&& cardPlacement.charAt(2)<='Z') ||(cardPlacement.charAt(2)>='0'&& cardPlacement.charAt(2)<='9') )  ){
+                return false;
+            }
+        else
+            {return true;}
+
+
+
+
+
     }
+
 
     /**
      * Determine whether a placement string is well-formed:
@@ -33,8 +94,34 @@ public class WarringStatesGame {
      */
     static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
-        return false;
+        if(placement==null||placement.equals("")||placement.length()%3!=0||placement.length()/3<1 || placement.length()/3>36){
+            return false;
+        }
+
+        for(int i=0;i<placement.length();i+=3) {
+            if (!isCardPlacementWellFormed(placement.substring(i,i+3))){
+                return false;
+                }
+
+            for(int j=0;j<placement.length();j+=3){
+                if(i!=j){
+                    if(placement.substring(i,i+2).equals(placement.substring(j,j+2))){
+                        return false;
+                    }
+                    if(placement.charAt(i+2)==placement.charAt(j+2)){
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
+
+    /*public static void main(String[] args) {
+        isPlacementWellFormed("f0Mc4M");
+
+    }*/
 
     /**
      * Determine whether a given move is legal given a provided valid placement:
