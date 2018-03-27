@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,7 +82,6 @@ public class WarringStatesGame {
 
     }
 
-
     /**
      * Determine whether a placement string is well-formed:
      * - it consists of exactly N three-character card placements (where N = 1 .. 36);
@@ -137,26 +137,174 @@ public class WarringStatesGame {
      */
     public static boolean isMoveLegal(String placement, char locationChar) {
         // FIXME Task 5: determine whether a given move is legal
+        int locationCor[] = new int[2];
+        int zhangLoc[] = new int[2];
+        locationCor = transformCor(locationChar);//transform the destination location from char to a 2D index
+        zhangLoc = transformCor(zLocation(placement));//transform ZhangYi's location to 2D index
+        if(!((locationChar >= 'A' && locationChar <= 'Z') || (locationChar >= '0' && locationChar <= '9')))
+            //check whether the destination is a leagal location
+            return false;
+        else if(zhangLoc[0] != locationCor[0] && zhangLoc[1] != locationCor[1])
+            //check whether destination is in the line with ZhangYi's location by checking
+            //whether the row index or column index is equal
+            return false;
+        else if(isEmptyLoc(placement, locationChar))
+            //check whether the destination is empty with card
+            return false;
+        else if(!isFarestCard(placement, zhangLoc, locationCor))
+            //check whether the destination is the farest card with it's kingdom
+            return false;
+        else if(locationChar == zLocation(placement))
+            return false;
+        return true;
+    }
+
+    static boolean isFarestCard(String placement, int[] zhangLoc, int[] locationCor)
+    {
+        char charLoc;
+        char kingdom = getKingdom(corTochar(locationCor[1], locationCor[0]), placement);//get the kingdom in destination location
+        if(zhangLoc[0] == locationCor[0])
+        {
+            //if destination is in the same row with ZhangYi
+            if(zhangLoc[1] > locationCor[1])
+            {
+                //start from destination location to boundary location
+                for(int i = locationCor[1] - 1; i >= 0; i--)
+                {
+                    //transform each 2D index back into char location
+                    //check whether the kingdom in this location is same as kingdom in destination location
+                    charLoc = corTochar(i, locationCor[0]);
+                    if(isSameKingdom(kingdom, placement, charLoc))
+                        return false;
+                }
+            }
+            else if(zhangLoc[1] < locationCor[1])
+            {
+                for(int i = locationCor[1] + 1; i < 6; i++)
+                {
+                    charLoc = corTochar(i, locationCor[0]);
+                    if(isSameKingdom(kingdom, placement, charLoc))
+                        return false;
+                }
+            }
+        }
+        else if(zhangLoc[1] == locationCor[1])
+        {
+            if(zhangLoc[0] > locationCor[0])
+            {
+                for(int i = locationCor[0] - 1; i >= 0; i--)
+                {
+                    charLoc = corTochar(locationCor[1], i);
+                    if(isSameKingdom(kingdom, placement, charLoc))
+                        return false;
+                }
+            }
+            else if(zhangLoc[0] < locationCor[0])
+            {
+                for(int i = locationCor[0] + 1; i < 6; i++)
+                {
+                    charLoc = corTochar(locationCor[1], i);
+                    if(isSameKingdom(kingdom, placement, charLoc))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    static char getKingdom(char location, String placement)
+    {
+        int offset = 3;
+        String sub = new String();
+        char kingdom = 'a';
+        for(int i = 0; i <= placement.length() - 3; i = i + offset)
+        {
+            sub = placement.substring(i, i + offset);
+            if(location == sub.charAt(2))
+                kingdom = sub.charAt(0);
+        }
+        return kingdom;
+    }
+
+    static boolean isSameKingdom(char kingdom, String placement, char charLoc)
+    {
+        //given the traget location, target kingdom and placement string
+        //check whether the kingdom in target location is same as target kingdom
+        int offset = 3;
+        String sub = new String();
+        for(int i = 0; i <= placement.length() - 3; i = i + offset)
+        {
+            //search for the whole placement string, split each card placement string(3 characters)
+            //compare each card's location with target location//
+            //if equal, check whether the target kingdom is equal to this kingdom
+            sub = placement.substring(i, i + offset);
+            if(charLoc == sub.charAt(2))
+                if(kingdom == sub.charAt(0))
+                    return true;
+        }
         return false;
     }
 
-    /* pick only the card that occurs at the end of the line else not legal */
-    public static boolean isFarthestCard(String placement, int zhangLoc, int LocationCoor)
+    static boolean isEmptyLoc(String placement, char locationChar)
     {
+        //check whether target location is an empty location by checking
+        //whether target char location is in placement string
+        int offset = 3;
+        for(int i = 2; i < placement.length(); i = i + offset)
+        {
+            if(locationChar == placement.charAt(i))
+                return false;
+        }
         return true;
     }
 
-    /* Get the kingdom of the card based on it's location and the string placement*/
-    public static char getKingdom(char location, String placement)
+    static int[] transformCor(char locationChar)
     {
-        return 'a';
+        //transform char location to 2D index
+        int locationCor[] = {0, 0};
+        if(locationChar >= 'A' && locationChar <= 'Z')
+        {
+            int index = locationChar - 65;
+            //locationCor[1] = (index / 6);
+            locationCor[1] = 5 - (index / 6);
+            locationCor[0] = index % 6;
+        }
+        else if(locationChar >= '0' && locationChar <= '9')
+        {
+            int index = 26 + (locationChar - 48);
+            //locationCor[1] = (index / 6);
+            locationCor[1] = 5 - (index / 6);
+            locationCor[0] = index % 6;
+        }
+        return locationCor;
     }
 
-    /* check if other the same kingdom occurs based on the selection*/
-    public static boolean isSameKingdom()
+    static char corTochar(int column, int row)
     {
-        return true;
+        //transform 2D index back into char location
+        column = 5 - column;
+        int index = column * 6 + row;
+        char ch = 'A';
+        if(index <= 25)
+            ch = (char)(65 + index);
+        else if(index > 25 && index <= 35)
+            ch = (char)(index - 1 - 25 + 48);
+        return ch;
     }
+
+    static char zLocation(String placement)
+    {
+        //find ZhangYi's location
+        int offset = 3;
+        char location = 'A';
+        for(int i = 0; i <= placement.length() - offset; i = i + offset)
+        {
+            if(placement.charAt(i) == 'z')
+                location = placement.charAt(i + 2);
+        }
+        return location;
+    }
+
     /**
      * Determine whether a move sequence is valid.
      * To be valid, the move sequence must be comprised of 1..N location characters
@@ -170,28 +318,125 @@ public class WarringStatesGame {
      */
     static boolean isMoveSequenceValid(String setup, String moveSequence) {
         // FIXME Task 6: determine whether a placement sequence is valid
-        return false;
+        String boardMatrix[][] = new String[6][6];
+        String placement = setup;
+        boardMatrix = createMatrix(placement);
+        char moveSequenceChar[] = moveSequence.toCharArray();
+        for(int i = 0; i < moveSequence.length(); i++)
+        {
+            if(isMoveLegal(placement, moveSequenceChar[i]))
+            {
+                boardMatrix = oneMove(moveSequenceChar[i], placement, boardMatrix);
+                placement = matrixToString(boardMatrix);
+                int k = 0;
+            }
+            else
+                return false;
+        }
+        return true;
     }
-    static void createMatrix(String placement){
-        //create  matrix for the game board with input placement string
 
-    }
-    static String matrixtoString(){
-        //covert the board matrix back to placement string
-    return "adw";
-    }
-    static void oneMove(char charLocation, String placement, String[][] boardMatrix)
+    static String[][] createMatrix(String placement)
     {
-        // update the boardMatrix with input of move and current placement
-
-    }
-
-    //transform the char location to index in 2-D matrix
-    static int[] transformCor(char locationChar)
-    {
+        //create a 6x6 matrix represent board, each element in this matrix is a
+        //character card
+        String boardMatrix[][] = new String[6][6];
+        int offset = 3;
         int cor[] = new int[2];
-        return cor;
+        for(int i = 0; i <= placement.length() - 3; i = i + offset)
+        {
+            cor = transformCor(placement.substring(i, i + 3).charAt(2));
+            boardMatrix[cor[0]][cor[1]] = placement.substring(i, i + 3).substring(0, 2);
+        }
+        return boardMatrix;
     }
+
+    static String matrixToString(String boardMatrix[][])
+    {
+        //convert matrix to placement string
+        int column, row;
+        char charLocation;
+        String placement = new String();
+        for(column = 5; column >= 0; column--)
+        {
+            for(row = 0; row <= 5; row++)
+            {
+                if(boardMatrix[row][column] != "")
+                {
+                    //if elemtn in matrix is "", which means
+                    //card has already been collected by player
+                    //do not add this place to placement string
+                    charLocation = corTochar(column, row);
+                    placement = placement + boardMatrix[row][column] + charLocation;
+                }
+            }
+        }
+        return placement;
+    }
+
+    static String[][] oneMove(char charLocation, String placement, String[][] boardMatrix)
+    {
+        //change the board state according to current move char
+        //the parameter are follow:
+        //@charLocation: the destination location
+        //@placement: placement string
+        //boardMatrix: matrix represent current board state
+        //return a matrix that represent new board state after current move
+        int cor[] = transformCor(charLocation);
+        char zhangLocChar = zLocation(placement);
+        int zhangLocCor[] = transformCor(zhangLocChar);
+        char kingdom = getKingdom(charLocation, placement);
+        if(zhangLocCor[0] == cor[0])
+        {
+            //if destination location is in the same row as ZhangYi's location
+            if(zhangLocCor[1] > cor[1])
+            {
+                for(int col = zhangLocCor[1] - 1; col >= cor[1]; col--)
+                {
+                    //start from ZhangYi's location to destination location
+                    //determine whether this location has the same kingdom as destination location
+                    if(isSameKingdom(kingdom, placement, corTochar(col, zhangLocCor[0])))
+                        boardMatrix[zhangLocCor[0]][col] = "";
+                }
+            }
+            else if(zhangLocCor[1] < cor[1])
+            {
+                for(int col = zhangLocCor[1] + 1; col <= cor[1]; col++)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(col, zhangLocCor[0])))
+                        //if the kindome is same, set the element in this location to ""
+                        boardMatrix[zhangLocCor[0]][col] = "";
+                }
+            }
+        }
+        else if(zhangLocCor[1] == cor[1])
+        {
+            //if destination location is in the same column as ZhangYi's location
+            if(zhangLocCor[0] > cor[0])
+            {
+                for(int row = zhangLocCor[0] - 1; row >= cor[0]; row--)
+                {
+                    //start from ZhangYi's location to destination location
+                    //determine whether this location has the same kingdom as destination location
+                    if(isSameKingdom(kingdom, placement, corTochar(zhangLocCor[1], row)))
+                        //if the kindome is same, set the element in this location to ""
+                        boardMatrix[row][zhangLocCor[1]] = "";
+                }
+            }
+            else if(zhangLocCor[0] < cor[0])
+            {
+                for(int row = zhangLocCor[0] + 1; row <= cor[0]; row++)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(zhangLocCor[1], row)))
+                        boardMatrix[row][zhangLocCor[1]] = "";
+                }
+            }
+        }
+        boardMatrix[zhangLocCor[0]][zhangLocCor[1]] = "";
+        boardMatrix[cor[0]][cor[1]] = "z9";
+        return boardMatrix;
+    }
+
     /**
      * Get the list of supporters for the chosen player, given the provided
      * setup and move sequence.
@@ -206,15 +451,78 @@ public class WarringStatesGame {
      */
     public static String getSupporters(String setup, String moveSequence, int numPlayers, int playerId) {
         // FIXME Task 7: get the list of supporters for a given player after a sequence of moves
-        return null;
+        Player player = new Player(playerId);
+        int offset = numPlayers;
+        String placement = setup;
+        String boardMatrix[][] = new String[6][6];
+        boardMatrix = createMatrix(placement);
+        String str = new String();
+        for(int i = 0; i < moveSequence.length(); i++)
+        {
+            if(i % numPlayers == playerId)
+                player = oneMove(moveSequence.charAt(i),placement, boardMatrix, player);
+            boardMatrix = oneMove(moveSequence.charAt(i), placement, boardMatrix);
+            placement = matrixToString(boardMatrix);
+        }
+        player.sortKingdom();
+        player.sortSupporters();
+        return player.getSortedSupporters();
     }
 
-    //finish one move and collect the corresponding card
-    static Player oneMove(char charLOcation, String placement, String[][] boardMatrix, Player player)
+    static Player oneMove(char charLocation, String placement, String[][] boardMatrix, Player player)
     {
+        int cor[] = transformCor(charLocation);
+        char zhangLocChar = zLocation(placement);
+        int zhangLocCor[] = transformCor(zhangLocChar);
+        char kingdom = getKingdom(charLocation, placement);
+        if(!player.hasKingdom(kingdom))
+            player.addKingdom(kingdom);
+        if(zhangLocCor[0] == cor[0])
+        {
+            if(zhangLocCor[1] > cor[1])
+            {
+                for(int col = zhangLocCor[1] - 1; col >= cor[1]; col--)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(col, zhangLocCor[0])))
+                        player.addSupporters(kingdom, boardMatrix[zhangLocCor[0]][col]);
+                        //boardMatrix[zhangLocCor[0]][col] = "";
+                }
+            }
+            else if(zhangLocCor[1] < cor[1])
+            {
+                for(int col = zhangLocCor[1] + 1; col <= cor[1]; col++)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(col, zhangLocCor[0])))
+                        player.addSupporters(kingdom, boardMatrix[zhangLocCor[0]][col]);
+                        //boardMatrix[zhangLocCor[0]][col] = "";
+                }
+            }
+        }
+        else if(zhangLocCor[1] == cor[1])
+        {
+            if(zhangLocCor[0] > cor[0])
+            {
+                for(int row = zhangLocCor[0] - 1; row >= cor[0]; row--)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(zhangLocCor[1], row)))
+                        player.addSupporters(kingdom, boardMatrix[row][zhangLocCor[1]]);
+                        //boardMatrix[row][zhangLocCor[1]] = "";
+                }
+            }
+            else if(zhangLocCor[0] < cor[0])
+            {
+                for(int row = zhangLocCor[0] + 1; row <= cor[0]; row++)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(zhangLocCor[1], row)))
+                        player.addSupporters(kingdom, boardMatrix[row][zhangLocCor[1]]);
+                        //boardMatrix[row][zhangLocCor[1]] = "";
+                }
+            }
+        }
+        //boardMatrix[zhangLocCor[0]][zhangLocCor[1]] = "";
+        //boardMatrix[cor[0]][cor[1]] = "z9";
         return player;
     }
-
 
 
     /**
@@ -236,7 +544,48 @@ public class WarringStatesGame {
      */
     public static int[] getFlags(String setup, String moveSequence, int numPlayers) {
         // FIXME Task 8: determine which player controls the flag of each kingdom after a given sequence of moves
-        return null;
+        int flag[] = new int[7];
+        Player player[] = new Player[numPlayers];
+        char kingdoms[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+        for(int i = 0; i < numPlayers; i++)
+            player[i] = getSupportersList(setup, moveSequence, numPlayers, i);
+        for(int i = 0; i < 7; i++)
+        {
+            int lastNum = -1;
+            for(int j = 0; j < numPlayers; j++)
+            {
+                if(!player[j].hasKingdom(kingdoms[i]))
+                    continue;
+                else
+                {
+                    if(player[i].getNumSup(kingdoms[j]) >= lastNum)
+                    {
+                        flag[i] = j;
+                        lastNum = player[i].getNumSup(kingdoms[j]);
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    static Player getSupportersList(String setup, String moveSequence, int numPlayers, int playerId) {
+        Player player = new Player(playerId);
+        int offset = numPlayers;
+        String placement = setup;
+        String boardMatrix[][] = new String[6][6];
+        boardMatrix = createMatrix(placement);
+        String str = new String();
+        for(int i = 0; i < moveSequence.length(); i++)
+        {
+            if(i % numPlayers == playerId)
+                player = oneMove(moveSequence.charAt(i),placement, boardMatrix, player);
+            boardMatrix = oneMove(moveSequence.charAt(i), placement, boardMatrix);
+            placement = matrixToString(boardMatrix);
+        }
+        player.sortKingdom();
+        player.sortSupporters();
+        return player;
     }
 
     /**
