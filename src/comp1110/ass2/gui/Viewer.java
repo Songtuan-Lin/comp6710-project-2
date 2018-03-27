@@ -1,7 +1,6 @@
 package comp1110.ass2.gui;
 
-import comp1110.ass2.Piece;
-import comp1110.ass2.WarringStatesGame;
+import comp1110.ass2.Card;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,9 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.RectangleBuilder;
 import javafx.stage.Stage;
 
 /**
@@ -27,7 +23,7 @@ import javafx.stage.Stage;
  * class does not play a game, it just illustrates various card placements.
  */
 public class Viewer extends Application {
-    Piece p = new Piece();
+    Card p = new Card();
 
     GridPane gridPane = new GridPane();
     private static final int VIEWER_WIDTH = 933;
