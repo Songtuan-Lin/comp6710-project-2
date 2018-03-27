@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.Piece;
 import comp1110.ass2.WarringStatesGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -26,45 +27,9 @@ import javafx.stage.Stage;
  * class does not play a game, it just illustrates various card placements.
  */
 public class Viewer extends Application {
+    Piece p = new Piece();
 
     GridPane gridPane = new GridPane();
-    Image a0 = new Image("/resource/a0_lady_mi.png");
-    Image a1 = new Image("/resource/a1_king_zhaoxiang.png");
-    Image a2 = new Image("/resource/a2_duke_xiao.png");
-    Image a3 = new Image("/resource/a3_lady_zhao.png");
-    Image a4 = new Image("/resource/a4_king__hui.png");
-    Image a5 = new Image("/resource/a5_king_zheng.png");
-    Image a6 = new Image("/resource/a6_bai_qi.png");
-    Image a7 = new Image("/resource/a7_shang_yang.png");
-    Image b0 = new Image("/resource/b0_sun_bin.png");
-    Image b1 = new Image("/resource/b1_zhong_wuyan.png");
-    Image b2 = new Image("/resource/b2_lord_menchang.png");
-    Image b3 = new Image("/resource/b3_king_jian.png");
-    Image b4 = new Image("/resource/b4_queen_junwang.png");
-    Image b5 = new Image("/resource/b5_king_xiang.png");
-    Image b6 = new Image("/resource/b6_king_xuan.png");
-    Image c0 = new Image("/resource/c0_wu_qi.png");
-    Image c1 = new Image("/resource/c1_lord_chunshen.png");
-    Image c2 = new Image("/resource/c2_fuchu.png");
-    Image c3 = new Image("/resource/c3_king_ai.png");
-    Image c4 = new Image("/resource/c4_king_you.png");
-    Image c5 = new Image("/resource/c5_king_kaolie.png");
-    Image d0 = new Image("/resource/d0_lian_po.png");
-    Image d1 = new Image("/resource/d1_lord_pingyuan.png");
-    Image d2 = new Image("/resource/d2_king_wuling.png");
-    Image d3 = new Image("/resource/d3_king_xiaocheng.png");
-    Image d4 = new Image("/resource/d4_li_mu.png");
-    Image e0 = new Image("/resource/e0_marquess_ai.png");
-    Image e1 = new Image("/resource/e1_han_fei.png");
-    Image e2 = new Image("/resource/e2_king_an.png");
-    Image e3 = new Image("/resource/e3_king_huanhui.png");
-    Image f0 = new Image("/resource/f0_king_anxi.png");
-    Image f1 = new Image("/resource/f1_lord_xinling.png");
-    Image f2 = new Image("/resource/f2_marquess_wen.png");
-    Image g0 = new Image("/resource/g0_king_xi.png");
-    Image g1 = new Image("/resource/g1_prince_dan.png");
-    Image z0 = new Image("/resource/z0_zhang_yi.png");
-
     private static final int VIEWER_WIDTH = 933;
     private static final int VIEWER_HEIGHT = 700;
 
@@ -86,23 +51,21 @@ public class Viewer extends Application {
             String sub[] = new String[placement.length() / 3];
             int rown = 0, coln = 0,col=5;
             Image[][] grid = new Image[6][6];
-            Image[][] grid2 =
-                    {
-                            {a0, a1, a2, a3, a4, a5, a6, a7},
-                            {b0, b1, b2, b3, b4, b5, b6},
-                            {c0, c1, c2, c3, c4, c5},
-                            {d0, d1, d2, d3, d4},
-                            {e0, e1, e2, e3},
-                            {f0, f1, f2},
-                            {g0, g1},
-                            {z0}
-                    };
-            int count = 0;
-            for (int x = 0; x < placement.length(); x += 3) {
-                sub[count] = placement.substring(x, x + 3);
-                System.out.println(sub[count]);
-                count++;
-            }
+
+        Image[][] grid2 =
+                {
+                        {p.a0, p.a1, p.a2, p.a3, p.a4, p.a5, p.a6, p.a7},
+                        {p.b0, p.b1, p.b2, p.b3, p.b4, p.b5, p.b6},
+                        {p.c0, p.c1, p.c2, p.c3, p.c4, p.c5},
+                        {p.d0, p.d1, p.d2, p.d3, p.d4},
+                        {p.e0, p.e1, p.e2, p.e3},
+                        {p.f0, p.f1, p.f2},
+                        {p.g0, p.g1},
+                        {p.z0}
+                };
+
+            sub = substr(placement);
+
             for (int y = 0; y < sub.length; y++) {
                 if (sub[y].charAt(0) == 'z') {
                     rown = 7;
@@ -156,6 +119,16 @@ public class Viewer extends Application {
 
         }
 
+        private String[] substr(String placement)
+        {
+            int count =0;
+            String sub[] = new String[placement.length()/3];
+            for (int x = 0; x < placement.length(); x += 3) {
+                sub[count] = placement.substring(x, x + 3);
+                count++;
+            }
+            return sub;
+        }
 
     /**
      * Create a basic text field for input and a refresh button.
