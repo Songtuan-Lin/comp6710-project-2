@@ -41,6 +41,8 @@ public class Viewer extends Application {
      * @param placement A valid placement string
      */
     void makePlacement(String placement) {
+
+        //example String for testing : "a2Aa3Gc4Hb5Ed0Sg04g19e02a7Uz0V"
         // FIXME Task 4: implement the simple placement viewer
       //  boolean a = WarringStatesGame.isCardPlacementWellFormed(placement);
 
@@ -103,6 +105,7 @@ public class Viewer extends Application {
             }
             gridPane.setHgap(2);
             gridPane.setVgap(2);
+            gridPane.setStyle("-fx-background-color: White; -fx-border-color: Black ");
             gridPane.setPadding(new Insets(1,1,1,1));
             for (int x = 0; x < grid.length; x++) {
                 for (int y = 0; y < grid[x].length; y++) {
