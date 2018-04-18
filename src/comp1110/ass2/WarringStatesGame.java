@@ -17,6 +17,7 @@ public class WarringStatesGame {
      *
      * @param cardPlacement A string describing a card placement
      * @return true if the card placement is well-formed
+     * author:Jiajia Xu
      */
     static boolean isCardPlacementWellFormed(String cardPlacement) {
         // FIXME Task 2: determine whether a card placement is well-formed
@@ -91,6 +92,7 @@ public class WarringStatesGame {
      *
      * @param placement A string describing a placement of one or more cards
      * @return true if the placement is well-formed
+     * Author: Jiajia Xu
      */
     static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
@@ -118,10 +120,13 @@ public class WarringStatesGame {
         return true;
     }
 
+
+
     /*public static void main(String[] args) {
         isPlacementWellFormed("f0Mc4M");
 
     }*/
+
 
     /**
      * Determine whether a given move is legal given a provided valid placement:
