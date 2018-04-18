@@ -1,13 +1,15 @@
 package comp1110.ass2;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import comp1110.ass2.gui.Viewer;
 
 /**
  * This class provides the text interface for the Warring States game
  */
 public class WarringStatesGame {
-
+//    public static Viewer v = new Viewer();
     /**
      * Determine whether a card placement is well-formed according to the following:
      * - it consists of exactly three characters
@@ -19,7 +21,7 @@ public class WarringStatesGame {
      * @return true if the card placement is well-formed
      * author:Jiajia Xu
      */
-    static boolean isCardPlacementWellFormed(String cardPlacement) {
+      static boolean isCardPlacementWellFormed(String cardPlacement) {
         // FIXME Task 2: determine whether a card placement is well-formed
         if(cardPlacement.length()!=3){
             return false;
@@ -574,6 +576,18 @@ public class WarringStatesGame {
         return flag;
     }
 
+    public static String[] substr(String placement)
+    {
+        int count =0;
+        String sub[] = new String[placement.length()/3];
+        for (int x = 0; x < placement.length(); x += 3) {
+            sub[count] = placement.substring(x, x + 3);
+            count++;
+        }
+        return sub;
+    }
+
+
     static Player getSupportersList(String setup, String moveSequence, int numPlayers, int playerId) {
         Player player = new Player(playerId);
         int offset = numPlayers;
@@ -609,6 +623,52 @@ public class WarringStatesGame {
      */
     public static char generateMove(String placement) {
         // FIXME Task 10: generate a legal move
-        return '\0';
+        String str[];
+        int count=0;
+        str = substr(placement);
+        int loccor[] = new int[2];
+        int zloc[] = new int[2];
+
+        zloc = transformCor(zLocation(placement));//transform ZhangYi's location to 2D index
+        int check = 0,sum=0;
+        char a[] = new char[str.length];
+        for(int x = 0 ; x<str.length; x++) {
+            if(str[x].charAt(0) != 'z' && check == 0)
+            {
+                sum++;
+                continue;
+            }
+            else
+                check = 1;
+            for(int j=sum;j<str.length;j++)
+            a[j] = str[j].charAt(2);
+        }
+        for(int x = 0 ;x<a.length;x++)
+        {
+            loccor = transformCor(a[x]);
+            if(!((a[x] >= 'A' && a[x] <= 'Z') || (a[x] >= '0' && a[x] <= '9')))
+                break;
+            else if(zloc[0] != loccor[0] && zloc[1] != loccor[1])
+                break;
+            else if(isEmptyLoc(placement, a[x]))
+                 break;
+            else
+                count++;
+
+        }
+        System.out.println(count);
+        if(count <= 1)
+        {
+            return '\0';
+        }else {
+            char r = str[count-1].charAt(2);
+            return r;
+        }
+    }
+
+    public static void main(String[] args) {
+        String s = "a03b04z91a02b6U";
+        System.out.println(generateMove(s));
+
     }
 }
