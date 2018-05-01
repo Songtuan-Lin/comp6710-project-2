@@ -573,10 +573,18 @@ public class WarringStatesGame {
         for(int i = 0; i < 7; i++)
             flag[i] = -1;
         for (int i = 0; i < moveSequence.length(); i++) {
+            //for each element in moveSequence, call oneMove method to let corresponding player who should
+            //carry out this move to collect card
+            //deKingdom is the kingdom in destination location
             deKingdom = getKingdom(moveSequence.charAt(i), placement);
             player[i % numPlayers] = oneMove(moveSequence.charAt(i), placement, boardMatrix, player[i % numPlayers]);
+            //change the boardMatrix according to this move
             boardMatrix = oneMove(moveSequence.charAt(i), placement, boardMatrix);
             placement = matrixToString(boardMatrix);
+            //(deKingdom - 97) corresponding to the slot in flag[] which hold the winner for this kingdom
+            //if this slot is empty, then, this player hold the flag after this move.
+            //if the the number of supporters for this kingdom this player hold is greater than the orignal holder
+            //for this kingdom, replace it
             if (flag[(int) (deKingdom - 97)] == -1)
                 flag[(int) (deKingdom - 97)] = i % numPlayers;
             else if (player[i % numPlayers].getNumSup(deKingdom) >= player[flag[(int) (deKingdom - 97)]].getNumSup(deKingdom))
