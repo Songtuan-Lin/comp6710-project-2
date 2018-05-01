@@ -219,7 +219,7 @@ public class WarringStatesGame {
         return true;
     }
 
-    static char getKingdom(char location, String placement)
+    public static char getKingdom(char location, String placement)
     {
         int offset = 3;
         String sub = new String();
@@ -233,7 +233,7 @@ public class WarringStatesGame {
         return kingdom;
     }
 
-    static boolean isSameKingdom(char kingdom, String placement, char charLoc)
+    public static boolean isSameKingdom(char kingdom, String placement, char charLoc)
     {
         //given the traget location, target kingdom and placement string
         //check whether the kingdom in target location is same as target kingdom
@@ -265,7 +265,7 @@ public class WarringStatesGame {
         return true;
     }
 
-    static int[] transformCor(char locationChar)
+    public static int[] transformCor(char locationChar)
     {
         //transform char location to 2D index
         int locationCor[] = {0, 0};
@@ -381,7 +381,7 @@ public class WarringStatesGame {
         return placement;
     }
 
-    static String[][] oneMove(char charLocation, String placement, String[][] boardMatrix)
+    public static String[][] oneMove(char charLocation, String placement, String[][] boardMatrix)
     {
         //change the board state according to current move char
         //the parameter are follow:
@@ -554,24 +554,23 @@ public class WarringStatesGame {
         int flag[] = new int[7];
         Player player[] = new Player[numPlayers];
         char kingdoms[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+        char deKingdom;
+        String boardMatrix[][] = new String[6][6];
+        boardMatrix = createMatrix(setup);
+        String placement = setup;
         for(int i = 0; i < numPlayers; i++)
-            player[i] = getSupportersList(setup, moveSequence, numPlayers, i);
+            player[i] = new Player(i);
         for(int i = 0; i < 7; i++)
-        {
-            int lastNum = -1;
-            for(int j = 0; j < numPlayers; j++)
-            {
-                if(!player[j].hasKingdom(kingdoms[i]))
-                    continue;
-                else
-                {
-                    if(player[i].getNumSup(kingdoms[j]) >= lastNum)
-                    {
-                        flag[i] = j;
-                        lastNum = player[i].getNumSup(kingdoms[j]);
-                    }
-                }
-            }
+            flag[i] = -1;
+        for (int i = 0; i < moveSequence.length(); i++) {
+            deKingdom = getKingdom(moveSequence.charAt(i), placement);
+            player[i % numPlayers] = oneMove(moveSequence.charAt(i), placement, boardMatrix, player[i % numPlayers]);
+            boardMatrix = oneMove(moveSequence.charAt(i), placement, boardMatrix);
+            placement = matrixToString(boardMatrix);
+            if (flag[(int) (deKingdom - 97)] == -1)
+                flag[(int) (deKingdom - 97)] = i % numPlayers;
+            else if (player[i % numPlayers].getNumSup(deKingdom) >= player[flag[(int) (deKingdom - 97)]].getNumSup(deKingdom))
+                flag[(int) (deKingdom - 97)] = i % numPlayers;
         }
         return flag;
     }
