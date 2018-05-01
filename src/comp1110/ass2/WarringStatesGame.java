@@ -3,6 +3,8 @@ package comp1110.ass2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import comp1110.ass2.gui.Viewer;
 
 /**
@@ -461,13 +463,19 @@ public class WarringStatesGame {
         Player player = new Player(playerId);
         int offset = numPlayers;
         String placement = setup;
+        //transfer placment into 6*6 board matrix.
         String boardMatrix[][] = new String[6][6];
         boardMatrix = createMatrix(placement);
         String str = new String();
+
         for(int i = 0; i < moveSequence.length(); i++)
         {
+            //assign i with corresponding location char
+            //for(int i=playerId; i<moveSequence.length();i+=numPlayers)
             if(i % numPlayers == playerId)
+
                 player = oneMove(moveSequence.charAt(i),placement, boardMatrix, player);
+            //"oneMove" method from task06
             boardMatrix = oneMove(moveSequence.charAt(i), placement, boardMatrix);
             placement = matrixToString(boardMatrix);
         }
@@ -478,9 +486,11 @@ public class WarringStatesGame {
 
     static Player oneMove(char charLocation, String placement, String[][] boardMatrix, Player player)
     {
+        //finding zhang yi's next location and original location on board matrix
         int cor[] = transformCor(charLocation);
         char zhangLocChar = zLocation(placement);
         int zhangLocCor[] = transformCor(zhangLocChar);
+
         char kingdom = getKingdom(charLocation, placement);
         if(!player.hasKingdom(kingdom))
             player.addKingdom(kingdom);
@@ -623,7 +633,30 @@ public class WarringStatesGame {
      */
     public static char generateMove(String placement) {
         // FIXME Task 10: generate a legal move
-        String str[];
+        Random ran = new Random();
+        if(LegalMoves(placement).isEmpty()) {
+            return '\0';
+        }
+        else{
+            //if legal moves are not empty, genrate a random location char from legal moves
+            int index = ran.nextInt(LegalMoves(placement).size());
+            return LegalMoves(placement).get(index);
+            }
+    }
+
+    //Legal moves for zhang yi
+    public static List<Character> LegalMoves(String placement) {
+        List<Character> result = new ArrayList<Character>();
+
+        for(int i = 2; i < placement.length(); i += 3){
+            if(isMoveLegal(placement,placement.charAt(i))){
+                result.add(placement.charAt(i));
+            }
+        }
+
+        return result;
+    }
+       /* String str[];
         int count=0;
         str = substr(placement);
         int loccor[] = new int[2];
@@ -670,5 +703,7 @@ public class WarringStatesGame {
         String s = "a03b04z91a02b6U";
         System.out.println(generateMove(s));
 
-    }
+    }*/
+
+
 }
