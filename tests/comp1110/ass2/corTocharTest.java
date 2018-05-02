@@ -4,6 +4,7 @@ import b.b.P;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 /**
  * Created by Rufus Raja (u6275198) to test the corTochar() function.
@@ -48,7 +49,7 @@ public class corTocharTest extends WarringStatesGame{
             for(int y=0;y<6;y++)
             {
                 char c = corTochar(x,y);
-                assertEquals("The expected result is "+testcors[y][x]+" but got "+c,c,testcors[y][x]);
+                assertTrue("The expected result is "+testcors[y][x]+" but got "+c, c == testcors[y][x]);
             }
         }
     }

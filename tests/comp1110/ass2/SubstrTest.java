@@ -36,7 +36,7 @@ public class SubstrTest extends WarringStatesGame {
         assertEquals("Expected result is a02 but got "+testStr[0],testStr[0], "a02");
         assertEquals("Expected result is b0A but got "+testStr[1],testStr[1], "b0A");
         assertEquals("Expected result is c03 but got "+testStr[2],testStr[2], "c03");
-        
+
         String testString2 = "z0E";
         testStr=substr(testString2);
         assertEquals("Expected result is z0E but got "+testStr[0],testStr[0], "z0E");
