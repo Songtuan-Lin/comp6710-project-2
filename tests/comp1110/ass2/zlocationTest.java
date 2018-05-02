@@ -14,11 +14,13 @@ public class zlocationTest {
     public void testOne(){
         String placement="z9K";
         assertEquals('K',WarringStatesGame.zLocation(placement));
+
     }
     @Test
     public void testSeveral(){
         String placement="a6Nb5Cc4Gd4Pz9De3Q";
         assertEquals('D',WarringStatesGame.zLocation(placement));
+
     }
 
 
