@@ -1,6 +1,6 @@
 package comp1110.ass2;
 
-import b.b.P;
+
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
