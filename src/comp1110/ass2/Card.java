@@ -1,8 +1,10 @@
 package comp1110.ass2;
 
 import javafx.scene.image.Image;
-
-/* Class to create and maintain the different pieces used in the game*/
+/**
+ * Created by Rufus Raja (u6275198)
+ * Class to create and maintain the different pieces used in the game
+ */
 public class Card {
 
    public Image a0 = new Image("/resource/a0_lady_mi.png");
