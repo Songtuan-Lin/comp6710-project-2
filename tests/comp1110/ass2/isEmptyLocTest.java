@@ -15,7 +15,17 @@ public class isEmptyLocTest {
 
 
     @Test
-    public void testEmpty(){
+    public void testEmptyone(){
+        String placement="a6N";
+        char locationChar='J';
+
+        //assertEquals(true,WarringStatesGame.isEmptyLoc(placement,locationChar));
+        assertTrue("Placement "+placement+" has location "+locationChar+", but it returns false",
+                WarringStatesGame.isEmptyLoc(placement,locationChar));
+    }
+
+    @Test
+    public void testEmptyseveral(){
         String placement="a6Nb5Cc4Gd4Pz9De3Q";
         char locationChar='J';
 
@@ -24,9 +34,17 @@ public class isEmptyLocTest {
                 WarringStatesGame.isEmptyLoc(placement,locationChar));
     }
 
+    @Test
+    public void testNonemptyone(){
+        String placement="e3Q";
+        char locationChar='Q';
+        //assertEquals(false,WarringStatesGame.isEmptyLoc(placement,locationChar));
+        assertFalse("Placement "+placement+" has no location "+locationChar+", but it returns true",
+                WarringStatesGame.isEmptyLoc(placement,locationChar));
+    }
 
     @Test
-    public void testNonempty(){
+    public void testNonemptyseveral(){
         String placement="a6Nb5Cc4Gd4Pz9De3Q";
         char locationChar='Q';
         //assertEquals(false,WarringStatesGame.isEmptyLoc(placement,locationChar));
