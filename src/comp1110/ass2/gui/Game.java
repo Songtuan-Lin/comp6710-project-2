@@ -212,6 +212,78 @@ public class Game extends Application {
 
     public void setup() {
         //check if the placement is valid and  make it visible
+
+    //    String sub[] = new String[placement.length() / 3];
+        int rown = 0, coln = 0,col=5;
+        Random r = new Random();
+        int selector = r.nextInt(20);
+        Image[][] grid = new Image[6][6];
+
+        Image[][] grid2 =
+                {
+                        {p.a0, p.a1, p.a2, p.a3, p.a4, p.a5, p.a6, p.a7},
+                        {p.b0, p.b1, p.b2, p.b3, p.b4, p.b5, p.b6},
+                        {p.c0, p.c1, p.c2, p.c3, p.c4, p.c5},
+                        {p.d0, p.d1, p.d2, p.d3, p.d4},
+                        {p.e0, p.e1, p.e2, p.e3},
+                        {p.f0, p.f1, p.f2},
+                        {p.g0, p.g1},
+                        {p.z0}
+                };
+
+        String [] sub = substr(PLACEMENTS[selector]);
+
+        for (int y = 0; y < sub.length; y++) {
+            if (sub[y].charAt(0) == 'z') {
+                rown = 7;
+                coln = 0;
+            } else {
+                rown = sub[y].charAt(0) - 'a';
+                coln = sub[y].charAt(1) - '0';
+            }
+            if (sub[y].charAt(2) >= 65 && sub[y].charAt(2) <= 70) {
+                int row = sub[y].charAt(2) % 13;
+                grid[row][col] = grid2[rown][coln];
+            }
+            if (sub[y].charAt(2) >= 71 && sub[y].charAt(2) <= 76) {
+                int row = (sub[y].charAt(2) % 71) ;
+                grid[row][col-1] = grid2[rown][coln];
+            }
+            if (sub[y].charAt(2) >= 77 && sub[y].charAt(2) <= 82) {
+                int row = (sub[y].charAt(2) % 77) ;
+                grid[row][col-2] = grid2[rown][coln];
+            }
+            if (sub[y].charAt(2) >= 83 && sub[y].charAt(2) <= 88) {
+                int row = (sub[y].charAt(2) % 83) ;
+                grid[row][col-3] = grid2[rown][coln];
+            }
+            if (sub[y].charAt(2) >= 89 && sub[y].charAt(2) <= 90) {
+                int row = (sub[y].charAt(2) % 89);
+                grid[row][col-4] = grid2[rown][coln];
+            }
+            if (sub[y].charAt(2) >= 48 && sub[y].charAt(2) <= 51) {
+                int row = (sub[y].charAt(2) % 23);
+                grid[row][col-4] = grid2[rown][coln];
+            }
+            if (sub[y].charAt(2) >= 52 && sub[y].charAt(2) <= 57) {
+                int row = (sub[y].charAt(2) % 52);
+                grid[row][col-5] = grid2[rown][coln];
+            }
+
+
+        }
+        gridPane.setHgap(2);
+        gridPane.setVgap(2);
+        gridPane.setStyle("-fx-background-color: White; -fx-border-color: Black ");
+        gridPane.setPadding(new Insets(1,1,1,1));
+        for (int x = 0; x < grid.length; x++) {
+            for (int y = 0; y < grid[x].length; y++) {
+                ImageView imageView = new ImageView(grid[x][y]);
+                imageView.setFitWidth(100);
+                imageView.setFitHeight(100);
+                gridPane.add(imageView, y, x);
+            }
+        }
     }
 
     public void nextStep() {
