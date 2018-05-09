@@ -23,7 +23,7 @@ import javafx.stage.Stage;
  * class does not play a game, it just illustrates various card placements.
  */
 public class Viewer extends Application {
-    Card p = new Card();
+    Card p = new Card();                                                //creating an object of the card class to display the cards.
 
     GridPane gridPane = new GridPane();
     private static final int VIEWER_WIDTH = 933;
@@ -50,6 +50,7 @@ public class Viewer extends Application {
             int rown = 0, coln = 0,col=5;
             Image[][] grid = new Image[6][6];
 
+    //Creating a grid of images to be used.
         Image[][] grid2 =
                 {
                         {p.a0, p.a1, p.a2, p.a3, p.a4, p.a5, p.a6, p.a7},
@@ -64,6 +65,7 @@ public class Viewer extends Application {
 
             sub = substr(placement);
 
+    // Checking the position based on the placement string and assigning the images to the board.
             for (int y = 0; y < sub.length; y++) {
                 if (sub[y].charAt(0) == 'z') {
                     rown = 7;
@@ -103,6 +105,8 @@ public class Viewer extends Application {
 
 
             }
+
+    //Setting the gridpane structure with the veritical and horizontal distances.
             gridPane.setHgap(2);
             gridPane.setVgap(2);
             gridPane.setStyle("-fx-background-color: White; -fx-border-color: Black ");
@@ -118,7 +122,11 @@ public class Viewer extends Application {
 
         }
 
-        private String[] substr(String placement)
+    /**
+     * @param placement
+     * @return array of strings containing each character and it's position
+     */
+    public String[] substr(String placement)
         {
             int count =0;
             String sub[] = new String[placement.length()/3];
@@ -128,6 +136,8 @@ public class Viewer extends Application {
             }
             return sub;
         }
+
+
 
     /**
      * Create a basic text field for input and a refresh button.
