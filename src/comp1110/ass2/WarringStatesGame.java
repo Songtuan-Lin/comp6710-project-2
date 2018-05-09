@@ -7,6 +7,7 @@ import java.util.Random;
 
 import comp1110.ass2.gui.Viewer;
 
+
 /**
  * This class provides the text interface for the Warring States game
  */
@@ -663,6 +664,10 @@ public class WarringStatesGame {
 
         return result;
     }
+
+
+
+
        /* String str[];
         int count=0;
         str = substr(placement);
