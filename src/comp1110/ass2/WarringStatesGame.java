@@ -99,7 +99,7 @@ public class WarringStatesGame {
      * @return true if the placement is well-formed
      * Author: Jiajia Xu
      */
-    static boolean isPlacementWellFormed(String placement) {
+    public static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
         if(placement==null||placement.equals("")||placement.length()%3!=0||placement.length()/3<1 || placement.length()/3>36){
             return false;

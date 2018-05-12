@@ -20,6 +20,7 @@ import java.util.Random;
 import comp1110.ass2.WarringStatesGame;
 
 import static comp1110.ass2.WarringStatesGame.*;
+import static javafx.application.Platform.exit;
 
 public class Game extends Application {
     int num_players = 0;
@@ -86,7 +87,7 @@ public class Game extends Application {
                         {p.e0, p.e1, p.e2, p.e3},
                         {p.f0, p.f1, p.f2},
                         {p.g0, p.g1},
-                        {p.z0}
+                        {p.z9}
                 };
 
         sub = substr(placement);
@@ -142,6 +143,7 @@ public class Game extends Application {
                 gridPane.add(imageView, y, x);
             }
         }
+        grid = null;
 
     }
 
@@ -301,7 +303,7 @@ public class Game extends Application {
                         {p.e0, p.e1, p.e2, p.e3},
                         {p.f0, p.f1, p.f2},
                         {p.g0, p.g1},
-                        {p.z0}
+                        {p.z9}
                 };
 
         placement1 = PLACEMENTS[0];
@@ -364,7 +366,7 @@ public class Game extends Application {
         int flag[] = new int[7];
         String setup = placement1;
         String boardMatrix[][];
-        String move = "z0"+getMove;
+        String move = "z9"+getMove;
         System.out.println(move);
         boolean check = isMoveLegal(placement1, getMove.charAt(0));
         boardMatrix = createMatrix(placement1);
@@ -372,9 +374,17 @@ public class Game extends Application {
         placement1 = matrixToString(boardMatrix);
         System.out.println("String placement"+placement1);
         gridPane.getChildren().clear();
-        makePlacement(placement1);
+        System.out.println("Placement before the move"+placement1);
+        boolean val = isPlacementWellFormed(placement1);
+        if(val) {
+            System.out.println("Made it here");
+            makePlacement(placement1);
+        }
+        else
+            exit();
         moveSequence = moveSequence + getMove;
-        flag = getFlags(setup,moveSequence,num_players);
+  //      flag = getFlags(setup,moveSequence,num_players);
+
 
     }
 }

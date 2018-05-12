@@ -60,7 +60,7 @@ public class Viewer extends Application {
                         {p.e0, p.e1, p.e2, p.e3},
                         {p.f0, p.f1, p.f2},
                         {p.g0, p.g1},
-                        {p.z0}
+                        {p.z9}
                 };
 
             sub = substr(placement);

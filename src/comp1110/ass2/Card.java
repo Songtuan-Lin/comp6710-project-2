@@ -42,6 +42,6 @@ public class Card {
    public Image f2 = new Image("/resource/f2_marquess_wen.png");
    public Image g0 = new Image("/resource/g0_king_xi.png");
    public Image g1 = new Image("/resource/g1_prince_dan.png");
-   public Image z0 = new Image("/resource/z0_zhang_yi.png");
+   public Image z9 = new Image("/resource/z0_zhang_yi.png");
 
 }
