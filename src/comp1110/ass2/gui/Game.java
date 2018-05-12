@@ -2,36 +2,42 @@ package comp1110.ass2.gui;
 
 import comp1110.ass2.Card;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Random;
+import comp1110.ass2.WarringStatesGame;
+
+import static comp1110.ass2.WarringStatesGame.*;
 
 public class Game extends Application {
+    int num_players = 0;
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     Card p = new Card();
-
+    String getMove;
     GridPane gridPane = new GridPane();
-    private static final int VIEWER_WIDTH = 933;
+    private static final int VIEWER_WIDTH = 1033;
     private static final int VIEWER_HEIGHT = 700;
 
     private static final String URI_BASE = "assets/";
-
+    String placement1;
     private final Group root = new Group();
+    private final Group introroot = new Group();
     private final Group controls = new Group();
     TextField textField;
+    String moveSequence = "";
     static final String[] PLACEMENTS = {
             "g0Aa0Bf1Ca1Dc5Ee1Fa4Ge3He2Ia2Jc2Kd0Lf0Mb4Nd4Oa6Pc3Qe0Ra5Sc1Td1Uc4Vb5Wb0Xa7Yf2Zb10a31z92b33b64d35g16b27d28c09",
             "g1Aa0Bc0Ce0De3Ed4Fb6Ga4Hg0Ib5Ja7Kb1Lz9Me1Nd0Of0Pf1Qb2Rc1Sd3Ta5Ub4Va2Wc5Xd1Ya3Zc20d21c32f23a64c45b36b07a18e29",
@@ -83,7 +89,7 @@ public class Game extends Application {
                         {p.z0}
                 };
 
-        sub = substr(PLACEMENTS[selector]);
+        sub = substr(placement);
 
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
@@ -153,13 +159,24 @@ public class Game extends Application {
         Label label1 = new Label("Player Move:");
         textField = new TextField();
         textField.setPrefWidth(150);
+   //     textField.set
         Button button = new Button("Play");
         Button newGame = new Button("New Game");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                getMove = textField.getText();
+                if (getMove.length() > 1)
+                {
+                    textField.clear();
+                }
+                else
+                {
+                    nextStep();
+                }
   //              gridPane.getChildren().clear();
   //              makePlacement(textField.getText());
+
                 textField.clear();
             }
         });
@@ -167,15 +184,13 @@ public class Game extends Application {
         newGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                gridPane.getChildren().clear();
-                makePlacement(textField.getText());
-                textField.clear();
+
             }
         });
         HBox hb = new HBox();
         HBox hb1 = new HBox();
         hb.getChildren().addAll(label1, textField, button);
-        hb1.getChildren().add(newGame);
+    //    hb1.getChildren().add(newGame);
         hb1.setSpacing(10);
         hb1.setLayoutX(800);
         hb1.setLayoutY(50);
@@ -196,11 +211,69 @@ public class Game extends Application {
         root.getChildren().add(gridPane);
 
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
+        Scene intro = new Scene(introroot, VIEWER_WIDTH,VIEWER_HEIGHT);
+        ChoiceBox player = new ChoiceBox<>();
+        HBox selection = new HBox();
+        HBox playerIDs = new HBox();
+        VBox kingdoms = new VBox();
+        Label qin = new Label("Qin :");
+        Label qi = new Label("Qi :");
+        Label chu = new Label("Chu :");
+        Label zhao = new Label("Zhao :");
+        Label han = new Label("Han :");
+        Label wei = new Label("Wei :");
+        Label yan = new Label("Yan :");
+        Label p1 = new Label("Player 1");
+        Label p2 = new Label("Player 2");
+        Label p3 = new Label("Player 3");
+        Label p4 = new Label("Player 4");
+        kingdoms.getChildren().addAll(qin,qi,chu,zhao,han,wei,yan);
+        kingdoms.setSpacing(30);
+        kingdoms.setLayoutX(750);
+        kingdoms.setLayoutY(70);
+
+        playerIDs.setSpacing(20);
+        playerIDs.setLayoutX(800);
+        playerIDs.setLayoutY(40);
+
+        Button startGame = new Button("Start Game");
+        player.setItems(FXCollections.observableArrayList(
+                "1 Player","2 Players","3 Players","4 Players"));
+        player.setValue("1 Player");
+        selection.setLayoutX(VIEWER_HEIGHT/2);
+        selection.setLayoutY(VIEWER_WIDTH/2);
+
+        player.setMaxSize(200,200);
+        introroot.getChildren().add(startGame);
         root.getChildren().add(controls);
-
-
+        root.getChildren().add(kingdoms);
+        root.getChildren().add(playerIDs);
+        introroot.getChildren().add(selection);
+        selection.getChildren().addAll(player, startGame);
+        selection.setSpacing(50);
+        startGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                num_players = Integer.parseInt(player.getValue().toString().substring(0,1));
+                System.out.println("number of players"+num_players);
+                gridPane.getChildren().clear();
+                if(num_players == 1 || num_players == 2)
+                    playerIDs.getChildren().addAll(p1,p2);
+                else if(num_players == 3 )
+                    playerIDs.getChildren().addAll(p1,p2,p3);
+                else {
+                    System.out.println(num_players);
+                    playerIDs.getChildren().addAll(p1, p2, p3, p4);
+                }
+                setup();
+                textField.clear();
+                primaryStage.setScene(scene);
+            }
+        });
         makeControls();
-        primaryStage.setScene(scene);
+    //    primaryStage.setScene(scene);
+
+        primaryStage.setScene(intro);
         primaryStage.show();
 
     }
@@ -231,7 +304,8 @@ public class Game extends Application {
                         {p.z0}
                 };
 
-        String [] sub = substr(PLACEMENTS[selector]);
+        placement1 = PLACEMENTS[0];
+        String [] sub = substr(placement1);
 
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
@@ -287,9 +361,20 @@ public class Game extends Application {
     }
 
     public void nextStep() {
-        //decide who's turn to play
-        //decide if the move is legal
-        //decide cards and flags collected for each player
-        //decide if the game has ended and who wins
+        int flag[] = new int[7];
+        String setup = placement1;
+        String boardMatrix[][];
+        String move = "z0"+getMove;
+        System.out.println(move);
+        boolean check = isMoveLegal(placement1, getMove.charAt(0));
+        boardMatrix = createMatrix(placement1);
+        boardMatrix = oneMove(move.charAt(2), placement1, boardMatrix);
+        placement1 = matrixToString(boardMatrix);
+        System.out.println("String placement"+placement1);
+        gridPane.getChildren().clear();
+        makePlacement(placement1);
+        moveSequence = moveSequence + getMove;
+        flag = getFlags(setup,moveSequence,num_players);
+
     }
 }

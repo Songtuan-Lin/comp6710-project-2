@@ -326,7 +326,7 @@ public class WarringStatesGame {
      * @param moveSequence a string of location characters representing moves
      * @return True if the placement sequence is valid
      */
-    static boolean isMoveSequenceValid(String setup, String moveSequence) {
+    public static boolean isMoveSequenceValid(String setup, String moveSequence) {
         // FIXME Task 6: determine whether a placement sequence is valid
         String boardMatrix[][] = new String[6][6];
         String placement = setup;
@@ -346,7 +346,7 @@ public class WarringStatesGame {
         return true;
     }
 
-    static String[][] createMatrix(String placement)
+    public static String[][] createMatrix(String placement)
     {
         //create a 6x6 matrix represent board, each element in this matrix is a
         //character card
@@ -361,7 +361,7 @@ public class WarringStatesGame {
         return boardMatrix;
     }
 
-    static String matrixToString(String boardMatrix[][])
+    public static String matrixToString(String boardMatrix[][])
     {
         //convert matrix to placement string
         int column, row;
