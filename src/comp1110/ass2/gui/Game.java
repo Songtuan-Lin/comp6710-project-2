@@ -14,6 +14,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.Random;
@@ -23,7 +27,7 @@ import static comp1110.ass2.WarringStatesGame.*;
 import static javafx.application.Platform.exit;
 
 public class Game extends Application {
-    int num_players = 0;
+    static int num_players = 0;
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     Card p = new Card();
@@ -31,14 +35,26 @@ public class Game extends Application {
     GridPane gridPane = new GridPane();
     private static final int VIEWER_WIDTH = 1033;
     private static final int VIEWER_HEIGHT = 700;
-
+    String boardMatrix[][];
+    VBox flags;
     private static final String URI_BASE = "assets/";
-    String placement1;
-    private final Group root = new Group();
+    String placement1,setup;
+    private static final Group root = new Group();
     private final Group introroot = new Group();
     private final Group controls = new Group();
+    static int flag[] = new int[7];
     TextField textField;
+    Label qinF  = new Label(" ");
+    Label qiF    = new Label(" "); 
+    Label chuF   = new Label(" "); 
+    Label zhaoF  = new Label(" "); 
+    Label hanF   = new Label(" "); 
+    Label weiF   = new Label(" "); 
+    Label yanF   = new Label(" ");
+    static Label winnerID = new Label(" ");;
     String moveSequence = "";
+    static int winner=0;
+    static Text test=new Text(45,350,"");
     static final String[] PLACEMENTS = {
             "g0Aa0Bf1Ca1Dc5Ee1Fa4Ge3He2Ia2Jc2Kd0Lf0Mb4Nd4Oa6Pc3Qe0Ra5Sc1Td1Uc4Vb5Wb0Xa7Yf2Zb10a31z92b33b64d35g16b27d28c09",
             "g1Aa0Bc0Ce0De3Ed4Fb6Ga4Hg0Ib5Ja7Kb1Lz9Me1Nd0Of0Pf1Qb2Rc1Sd3Ta5Ub4Va2Wc5Xd1Ya3Zc20d21c32f23a64c45b36b07a18e29",
@@ -61,6 +77,8 @@ public class Game extends Application {
             "e3Ad4Ba5Cd1Dc1Eb3Fc5Gd2Hg0Ie0Ja2Kb5Lf1Md3Na6Oz9Pb1Qc3Rf2Sc4Tb0Uc0Ve1Wd0Xg1Ye2Zb60a71a32a03b24a45b46f07c28a19",
             "g0Ac1Bb4Ca5Da2Ea6Ff0Gb1Ha3Id3Ja0Kz9Lc5Mb0Nf1Od2Pe1Qc2Re3Sb6Td0Ub5Va1Wb2Xc3Yb3Zc00e21e02a73d14f25a46g17c48d49"
     };
+    static final char c[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9'};
+
 
     // FIXME Task 9: Implement a basic playable Warring States game in JavaFX
 
@@ -218,22 +236,25 @@ public class Game extends Application {
         HBox selection = new HBox();
         HBox playerIDs = new HBox();
         VBox kingdoms = new VBox();
-        Label qin = new Label("Qin :");
-        Label qi = new Label("Qi :");
-        Label chu = new Label("Chu :");
+        Label qin  = new Label("Qin :");
+        Label qi   = new Label("Qi :");
+        Label chu  = new Label("Chu :");
         Label zhao = new Label("Zhao :");
-        Label han = new Label("Han :");
-        Label wei = new Label("Wei :");
-        Label yan = new Label("Yan :");
-        Label p1 = new Label("Player 1");
-        Label p2 = new Label("Player 2");
-        Label p3 = new Label("Player 3");
-        Label p4 = new Label("Player 4");
+        Label han  = new Label("Han :");
+        Label wei  = new Label("Wei :");
+        Label yan  = new Label("Yan :");
+        Label p1   = new Label("Player IDs");
+        Label p2   = new Label("Player 2");
+        Label p3   = new Label("Player 3");
+        Label p4   = new Label("Player 4");
         kingdoms.getChildren().addAll(qin,qi,chu,zhao,han,wei,yan);
         kingdoms.setSpacing(30);
         kingdoms.setLayoutX(750);
         kingdoms.setLayoutY(70);
-
+        flags = new VBox();
+        flags.setSpacing(30);
+        flags.setLayoutX(800);
+        flags.setLayoutY(70);
         playerIDs.setSpacing(20);
         playerIDs.setLayoutX(800);
         playerIDs.setLayoutY(40);
@@ -250,6 +271,9 @@ public class Game extends Application {
         root.getChildren().add(controls);
         root.getChildren().add(kingdoms);
         root.getChildren().add(playerIDs);
+        root.getChildren().add(flags);
+        root.getChildren().add(winnerID);
+        root.getChildren().add(test);
         introroot.getChildren().add(selection);
         selection.getChildren().addAll(player, startGame);
         selection.setSpacing(50);
@@ -258,7 +282,7 @@ public class Game extends Application {
             public void handle(ActionEvent e) {
                 num_players = Integer.parseInt(player.getValue().toString().substring(0,1));
                 System.out.println("number of players"+num_players);
-                gridPane.getChildren().clear();
+     /*           gridPane.getChildren().clear();
                 if(num_players == 1 || num_players == 2)
                     playerIDs.getChildren().addAll(p1,p2);
                 else if(num_players == 3 )
@@ -266,9 +290,13 @@ public class Game extends Application {
                 else {
                     System.out.println(num_players);
                     playerIDs.getChildren().addAll(p1, p2, p3, p4);
-                }
+                }*/
+                playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
+                flags.getChildren().addAll(qinF,qiF,chuF,zhaoF,hanF,weiF,yanF);
+                setup = placement1;
+                boardMatrix = createMatrix(placement1);
                 primaryStage.setScene(scene);
             }
         });
@@ -283,7 +311,54 @@ public class Game extends Application {
 
     public static void winner() {
         //count the number of flags and cards of each player, decide who is the winner
+        int playerSums [] = new int[num_players];
+        for(int x=0; x<playerSums.length;x++)
+        {
+            playerSums[x] = WinnerSum(x);
+        }
+        int max = playerSums[0];
+        winner = 0;
+        for(int x=0;x<playerSums.length;x++)
+        {
+            if(playerSums[x] >= max)
+            {
+                max=playerSums[x];
+                winner= x;
+
+            }
+        }
+        winner = winner+1;
+        System.out.println("Winner ID:"+winner);
+        String win = Integer.toString(winner);
+  /*      winnerID.setText("Player:"+win+" is the Winner!");
+        winnerID.resize(500,500);
+        winnerID.setStyle("-fx-font-weight: bold");
+        winnerID.setLayoutX(VIEWER_WIDTH/2-100);
+        winnerID.setLayoutY(VIEWER_HEIGHT/2-100);
+        winnerID.setTextFill(Color.RED); */
+        test.setText("Player "+win+" is the Winner!");
+        test.setLayoutX(0);
+        test.setLayoutY(0);
+        test.setFont(Font.font("Verdana", FontWeight.BOLD, 70));
+        test.setFill(Color.RED);
+
+
+
     }
+
+    public static int WinnerSum(int y)
+    {
+        int sum = 0;
+        for(int x=0;x<flag.length;x++)
+        {
+            if(flag[x] == y)
+            {
+                sum+=1;
+            }
+        }
+        return sum;
+    }
+
 
     public void setup() {
         //check if the placement is valid and  make it visible
@@ -362,29 +437,55 @@ public class Game extends Application {
         }
     }
 
+
     public void nextStep() {
-        int flag[] = new int[7];
-        String setup = placement1;
-        String boardMatrix[][];
         String move = "z9"+getMove;
+        boolean check = true;
         System.out.println(move);
-        boolean check = isMoveLegal(placement1, getMove.charAt(0));
-        boardMatrix = createMatrix(placement1);
-        boardMatrix = oneMove(move.charAt(2), placement1, boardMatrix);
-        placement1 = matrixToString(boardMatrix);
-        System.out.println("String placement"+placement1);
-        gridPane.getChildren().clear();
-        System.out.println("Placement before the move"+placement1);
-        boolean val = isPlacementWellFormed(placement1);
-        if(val) {
-            System.out.println("Made it here");
-            makePlacement(placement1);
+        boolean isEnd = true;
+        if(!getMove.equals("")) {
+            check = isMoveLegal(placement1, getMove.charAt(0));
+            if (check) {
+                boardMatrix = oneMove(move.charAt(2), placement1, boardMatrix);
+                placement1 = matrixToString(boardMatrix);
+                System.out.println("String placement " + placement1);
+                gridPane.getChildren().clear();
+                System.out.println("Placement before the move " + placement1);
+                boolean val = isPlacementWellFormed(placement1);
+                if (val) {
+                    System.out.println("Made it here");
+                    makePlacement(placement1);
+                } else
+                    exit();
+                moveSequence = moveSequence + getMove;
+                flag = getFlags(setup, moveSequence, num_players);
+                for (int i = 0; i < flag.length; i++) {
+                    if (flag[i] == -1) {
+                        flag[i] = 0;
+                    } else if (flag[i] == 0) {
+                        flag[i] = 1;
+                    } else if (flag[i] == 1) {
+                        flag[i] = 2;
+                    } else if (flag[i] == 2) {
+                        flag[i] = 3;
+                    } else if (flag[i] == 3) {
+                        flag[i] = 4;
+                    }
+                }
+
+                qinF.setText(Integer.toString(flag[0]));
+                qiF.setText(Integer.toString(flag[1]));
+                chuF.setText(Integer.toString(flag[2]));
+                zhaoF.setText(Integer.toString(flag[3]));
+                hanF.setText(Integer.toString(flag[4]));
+                weiF.setText(Integer.toString(flag[5]));
+                yanF.setText(Integer.toString(flag[6]));
+            }
         }
-        else
-            exit();
-        moveSequence = moveSequence + getMove;
-  //      flag = getFlags(setup,moveSequence,num_players);
-
-
+        for(int y=0;y<c.length;y++)
+            if(isMoveLegal(placement1,c[y]))
+                isEnd = false;
+        if(isEnd == true)
+            winner();
     }
 }
