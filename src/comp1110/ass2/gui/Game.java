@@ -11,23 +11,32 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.AudioTrack;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.Random;
 import comp1110.ass2.WarringStatesGame;
 
+import javafx.scene.media.AudioTrack;
+
 import static comp1110.ass2.WarringStatesGame.*;
+import static javafx.application.Platform.accessibilityActiveProperty;
 import static javafx.application.Platform.exit;
 
 public class Game extends Application {
     static int num_players = 0;
+
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     Card p = new Card();
@@ -36,14 +45,16 @@ public class Game extends Application {
     private static final int VIEWER_WIDTH = 1033;
     private static final int VIEWER_HEIGHT = 700;
     String boardMatrix[][];
+    static String playerName[];
     VBox flags;
     private static final String URI_BASE = "assets/";
     String placement1,setup;
-    private static final Group root = new Group();
-    private final Group introroot = new Group();
+    private static final Pane root = new Pane();
+    private final Pane introroot = new Pane();
     private final Group controls = new Group();
     static int flag[] = new int[7];
-    TextField textField;
+    static String roundGains[] = new String[7];
+    TextField textField,player1,player2,player3,player4;
     Label qinF  = new Label(" ");
     Label qiF    = new Label(" "); 
     Label chuF   = new Label(" "); 
@@ -51,10 +62,28 @@ public class Game extends Application {
     Label hanF   = new Label(" "); 
     Label weiF   = new Label(" "); 
     Label yanF   = new Label(" ");
+    int mCount = 0;
     static Label winnerID = new Label(" ");;
     String moveSequence = "";
     static int winner=0;
     static Text test=new Text(45,350,"");
+    AudioClip click1 = new AudioClip("http://www.wavlist.com/soundfx/020/clock-tick1.wav");
+    AudioClip scene1player = new AudioClip(this.getClass().getResource("/resource/Immigrant.mp3").toString());
+    AudioClip scene2player = new AudioClip(this.getClass().getResource("/resource/z_avengers.mp3").toString());
+    AudioClip lokiIntro = new AudioClip(this.getClass().getResource("/resource/LokiIntro.wav").toString());
+    AudioClip loki1 = new AudioClip(this.getClass().getResource("/resource/Loki1.wav").toString());
+    AudioClip loki2 = new AudioClip(this.getClass().getResource("/resource/Loki2.wav").toString());
+    AudioClip lokiEnding = new AudioClip(this.getClass().getResource("/resource/LokiEnding.wav").toString());
+    AudioClip click2 = new AudioClip(this.getClass().getResource("/resource/clicksound.mp3").toString());
+/*    String scene1Music = "/resource/scene1.mp3";     // For example
+    String scene2Music = "/resource/scene2.mp3";
+    Media sound1 = new Media(new File(scene1Music).toURI().toString());
+    Media sound2 = new Media(new File(scene2Music).toURI().toString());
+    MediaPlayer mediaPlayer1 = new MediaPlayer(sound1);
+    MediaPlayer mediaPlayer2 = new MediaPlayer(sound2);
+
+*/
+
     static final String[] PLACEMENTS = {
             "g0Aa0Bf1Ca1Dc5Ee1Fa4Ge3He2Ia2Jc2Kd0Lf0Mb4Nd4Oa6Pc3Qe0Ra5Sc1Td1Uc4Vb5Wb0Xa7Yf2Zb10a31z92b33b64d35g16b27d28c09",
             "g1Aa0Bc0Ce0De3Ed4Fb6Ga4Hg0Ib5Ja7Kb1Lz9Me1Nd0Of0Pf1Qb2Rc1Sd3Ta5Ub4Va2Wc5Xd1Ya3Zc20d21c32f23a64c45b36b07a18e29",
@@ -87,6 +116,7 @@ public class Game extends Application {
     // FIXME Task 12: Integrate a more advanced opponent into your game
 
     void makePlacement(String placement) {
+
 
 
 
@@ -151,8 +181,10 @@ public class Game extends Application {
         }
         gridPane.setHgap(2);
         gridPane.setVgap(2);
+        gridPane.autosize();
         gridPane.setStyle("-fx-background-color: White; -fx-border-color: Black ");
         gridPane.setPadding(new Insets(1,1,1,1));
+
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[x].length; y++) {
                 ImageView imageView = new ImageView(grid[x][y]);
@@ -177,14 +209,25 @@ public class Game extends Application {
     }
     private void makeControls() {
         Label label1 = new Label("Player Move:");
+        label1.setTextFill(Color.WHITE);
         textField = new TextField();
         textField.setPrefWidth(150);
    //     textField.set
         Button button = new Button("Play");
+
+
         Button newGame = new Button("New Game");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                click1.setVolume(0.3);
+                click1.play();
+                mCount=mCount+1;
+                if(mCount%3 == 0)
+                    loki1.play();
+                if(mCount%7 == 0)
+                    loki2.play();
+
                 getMove = textField.getText();
                 if (getMove.length() > 1)
                 {
@@ -198,6 +241,40 @@ public class Game extends Application {
   //              makePlacement(textField.getText());
 
                 textField.clear();
+              //  click2.stop();
+            }
+        });
+
+        textField.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
+            @Override
+            public void handle(KeyEvent ke)
+            {
+
+
+                if (ke.getCode().equals(KeyCode.ENTER))
+                {
+                    click1.setVolume(0.3);
+                    click1.play();
+                    mCount=mCount+1;
+                    if(mCount%3 == 0)
+                        loki1.play();
+                    if(mCount%7 == 0)
+                        loki2.play();
+                    getMove = textField.getText();
+                    if (getMove.length() > 1)
+                    {
+                        textField.clear();
+                    }
+                    else
+                    {
+                        nextStep();
+                    }
+                    //              gridPane.getChildren().clear();
+                    //              makePlacement(textField.getText());
+
+                    textField.clear();
+                }
             }
         });
 
@@ -215,15 +292,22 @@ public class Game extends Application {
         hb1.setLayoutX(800);
         hb1.setLayoutY(50);
         hb.setSpacing(10);
-        hb.setLayoutX(130);
-        hb.setLayoutY(VIEWER_HEIGHT - 50);
+        hb.setLayoutX(250);
+        hb.setLayoutY(VIEWER_HEIGHT-50);
         controls.getChildren().add(hb);
         controls.getChildren().add(hb1);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Warring States Viewer");
+        primaryStage.setTitle("The Comic Wars");
+        qinF.setTextFill(Color.WHITE.brighter());
+        qiF.setTextFill(Color.WHITE.brighter());
+        chuF.setTextFill(Color.WHITE.brighter());
+        zhaoF.setTextFill(Color.WHITE.brighter());
+        hanF.setTextFill(Color.WHITE.brighter());
+        weiF.setTextFill(Color.WHITE.brighter());
+        yanF.setTextFill(Color.WHITE.brighter());
 
         gridPane.setLayoutX(100);
         gridPane.setLayoutY(10);
@@ -232,6 +316,20 @@ public class Game extends Application {
 
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
         Scene intro = new Scene(introroot, VIEWER_WIDTH,VIEWER_HEIGHT);
+        intro.getStylesheets().addAll(this.getClass().getResource("/resource/style.css").toExternalForm());
+        Image img = new Image("/resource/z9_background.jpg");
+        Image img2 = new Image("/resource/z10_background.jpg");
+      //  root.setBackground();
+      //  root.getChildren().add(bgImg);
+   //     introroot.setBackground(new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+        introroot.setBackground(new Background(new BackgroundImage(img,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true))));
+        root.setBackground(new Background(new BackgroundImage(img2,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true))));
         ChoiceBox player = new ChoiceBox<>();
         HBox selection = new HBox();
         HBox playerIDs = new HBox();
@@ -244,44 +342,186 @@ public class Game extends Application {
         Label wei  = new Label("Wei :");
         Label yan  = new Label("Yan :");
         Label p1   = new Label("Player IDs");
-        Label p2   = new Label("Player 2");
-        Label p3   = new Label("Player 3");
-        Label p4   = new Label("Player 4");
-        kingdoms.getChildren().addAll(qin,qi,chu,zhao,han,wei,yan);
+        qin.setTextFill(Color.WHITE);
+        qi.setTextFill(Color.WHITE);
+        chu.setTextFill(Color.WHITE);
+        zhao.setTextFill(Color.WHITE);
+        han.setTextFill(Color.WHITE);
+        wei.setTextFill(Color.WHITE);
+        yan.setTextFill(Color.WHITE);
+        p1.setTextFill(Color.WHITE);
+        p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+
+
+
+
+
+    //    kingdoms.getChildren().addAll(qin,qi,chu,zhao,han,wei,yan);
         kingdoms.setSpacing(30);
         kingdoms.setLayoutX(750);
         kingdoms.setLayoutY(70);
         flags = new VBox();
-        flags.setSpacing(30);
-        flags.setLayoutX(800);
-        flags.setLayoutY(70);
+        flags.setSpacing(50);
+        flags.setLayoutX(835);
+        flags.setLayoutY(40);
         playerIDs.setSpacing(20);
-        playerIDs.setLayoutX(800);
-        playerIDs.setLayoutY(40);
+        playerIDs.setLayoutX(830);
+        playerIDs.setLayoutY(10);
 
         Button startGame = new Button("Start Game");
+        Button mutemusic = new Button("Toggle Music");
+  //      Button soundeffect = new Button("Toggle Sfx");
+        HBox sounds = new HBox();
+        sounds.getChildren().addAll(mutemusic);
+        sounds.setSpacing(20);
+        sounds.setLayoutX(780);
+        sounds.setLayoutY(650);
+        startGame.setLayoutX(480);
+        startGame.setLayoutY(550);
         player.setItems(FXCollections.observableArrayList(
                 "1 Player","2 Players","3 Players","4 Players"));
         player.setValue("1 Player");
         selection.setLayoutX(VIEWER_HEIGHT/2);
         selection.setLayoutY(VIEWER_WIDTH/2);
-
+        player.setLayoutY(250);
+        player.setLayoutX(475);
+        VBox playerLabels = new VBox();
+        Label player1name = new Label("Player 1");
+        Label player2name = new Label("Player 2");
+        Label player3name = new Label("Player 3");
+        Label player4name = new Label("Player 4");
+        player1name.setTextFill(Color.WHITE);
+        player2name.setTextFill(Color.WHITE);
+        player3name.setTextFill(Color.WHITE);
+        player4name.setTextFill(Color.WHITE);
+        VBox playernames = new VBox();
+        player1 = new TextField();
+        player2 = new TextField();
+        player3 = new TextField();
+        player4 = new TextField();
+    //    player1.setDisable(true);
+        player2.setDisable(true);
+        player3.setDisable(true);
+        player4.setDisable(true);
+        playerLabels.setLayoutX(390);
+        playerLabels.setLayoutY(300);
+        playerLabels.setSpacing(30);
+        playerLabels.getChildren().addAll(player1name,player2name,player3name,player4name);
+        playernames.setLayoutX(445);
+        playernames.setLayoutY(300);
+        playernames.getChildren().addAll(player1,player2,player3,player4);
+        playernames.setSpacing(20);
         player.setMaxSize(200,200);
-        introroot.getChildren().add(startGame);
+    //    introroot.getChildren().add(startGame);
+        introroot.getChildren().add(playernames);
+        introroot.getChildren().add(playerLabels);
         root.getChildren().add(controls);
-        root.getChildren().add(kingdoms);
+   //     root.getChildren().add(kingdoms);
         root.getChildren().add(playerIDs);
         root.getChildren().add(flags);
         root.getChildren().add(winnerID);
         root.getChildren().add(test);
-        introroot.getChildren().add(selection);
-        selection.getChildren().addAll(player, startGame);
-        selection.setSpacing(50);
+        root.getChildren().add(sounds);
+        scene1player.setVolume(0.2);
+        scene1player.play();
+        introroot.getChildren().add(player);
+        introroot.getChildren().add(startGame);
+   //     selection.getChildren().addAll(startGame);
+   //     selection.setSpacing(50);
+
+
+        player.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(player.getValue() == "2 Players")
+                {
+                    player2.setDisable(false);
+                }
+                else if(player.getValue() == "3 players")
+                {
+                    player2.setDisable(false);
+                    player3.setDisable(false);
+                }
+                else if(player.getValue() == "4 players")
+                {
+                    player2.setDisable(false);
+                    player3.setDisable(false);
+                    player4.setDisable(false);
+                }
+            }
+        });
+        playerName = new String[4];
+        playerName[0] = "Player 1";
+        playerName[1] = "Player 2";
+        playerName[2] = "Player 3";
+        playerName[3] = "Player 4";
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                click1.play();
+                scene1player.stop();
+                lokiIntro.play();
+                scene2player.setVolume(0.1);
+                scene2player.play();
                 num_players = Integer.parseInt(player.getValue().toString().substring(0,1));
                 System.out.println("number of players"+num_players);
+                gridPane.setGridLinesVisible(true);
+                if(!player1.getText().equals(""))
+                playerName[0] = player1.getText();
+                if(num_players == 1)
+                {
+                    playerName[1] = "Omega(AI)";
+                }
+                if(num_players == 2)
+                {
+                    if(!player2.getText().equals(""))
+                    playerName[1] = player2.getText();
+                }
+                if(num_players == 3)
+                {
+                    if(!player2.getText().equals("") || !player3.getText().equals("")) {
+                        playerName[1] = player2.getText();
+                        playerName[2] = player3.getText();
+                    }
+                }
+                if(num_players == 4)
+                {
+                    if(!player2.getText().equals("") || !player3.getText().equals("") || !player4.getText().equals("")) {
+                        playerName[1] = player2.getText();
+                        playerName[2] = player3.getText();
+                        playerName[3] = player4.getText();
+                    }
+                }
+                for(String s:roundGains)
+                {
+                    s = " ";
+                }
+
+                mutemusic.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if(scene2player.isPlaying())
+                        {
+                            scene2player.stop();
+                        }
+                        else
+                            scene2player.play();
+                    }
+                });
+
+    /*            soundeffect.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if(click1.isPlaying())
+                        {
+                            System.out.println("This is the current volume"+click1.getVolume());
+                            click1.setVolume(0);
+                        }
+                        else
+                            click1.setVolume(1.0);
+                    }
+                });
+*/
      /*           gridPane.getChildren().clear();
                 if(num_players == 1 || num_players == 2)
                     playerIDs.getChildren().addAll(p1,p2);
@@ -294,7 +534,13 @@ public class Game extends Application {
                 playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
-                flags.getChildren().addAll(qinF,qiF,chuF,zhaoF,hanF,weiF,yanF);
+                flags.getChildren().addAll(qinF,qiF,chuF,zhaoF,hanF);
+                weiF.setLayoutX(833);
+                weiF.setLayoutY(365);
+                yanF.setLayoutX(833);
+                yanF.setLayoutY(410);
+                root.getChildren().add(weiF);
+                root.getChildren().add(yanF);
                 setup = placement1;
                 boardMatrix = createMatrix(placement1);
                 primaryStage.setScene(scene);
@@ -302,7 +548,7 @@ public class Game extends Application {
         });
         makeControls();
     //    primaryStage.setScene(scene);
-
+        primaryStage.setResizable(false);
         primaryStage.setScene(intro);
         primaryStage.show();
 
@@ -318,6 +564,7 @@ public class Game extends Application {
         }
         int max = playerSums[0];
         winner = 0;
+        String winnername = " ";
         for(int x=0;x<playerSums.length;x++)
         {
             if(playerSums[x] >= max)
@@ -327,7 +574,8 @@ public class Game extends Application {
 
             }
         }
-        winner = winner+1;
+  //      winner = winner;
+        winnername = playerName[winner];
         System.out.println("Winner ID:"+winner);
         String win = Integer.toString(winner);
   /*      winnerID.setText("Player:"+win+" is the Winner!");
@@ -336,10 +584,13 @@ public class Game extends Application {
         winnerID.setLayoutX(VIEWER_WIDTH/2-100);
         winnerID.setLayoutY(VIEWER_HEIGHT/2-100);
         winnerID.setTextFill(Color.RED); */
-        test.setText("Player "+win+" is the Winner!");
+        Game end = new Game();
+        test.setText("Player "+winnername+" is the Winner!");
+        end.scene2player.setVolume(0.08);
+        end.lokiEnding.play();
         test.setLayoutX(0);
         test.setLayoutY(0);
-        test.setFont(Font.font("Verdana", FontWeight.BOLD, 70));
+        test.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
         test.setFill(Color.RED);
 
 
@@ -425,7 +676,7 @@ public class Game extends Application {
         }
         gridPane.setHgap(2);
         gridPane.setVgap(2);
-        gridPane.setStyle("-fx-background-color: White; -fx-border-color: Black ");
+        gridPane.setStyle("-fx-background-color: Black; -fx-border-color: Black");
         gridPane.setPadding(new Insets(1,1,1,1));
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[x].length; y++) {
@@ -462,24 +713,38 @@ public class Game extends Application {
                 for (int i = 0; i < flag.length; i++) {
                     if (flag[i] == -1) {
                         flag[i] = 0;
+                        roundGains[i] = " ";
                     } else if (flag[i] == 0) {
                         flag[i] = 1;
+                        roundGains[i] = playerName[0];
                     } else if (flag[i] == 1) {
                         flag[i] = 2;
+                        roundGains[i] = playerName[1];
                     } else if (flag[i] == 2) {
                         flag[i] = 3;
+                        roundGains[i] = playerName[2];
                     } else if (flag[i] == 3) {
                         flag[i] = 4;
+                        roundGains[i] = playerName[3];
                     }
                 }
 
-                qinF.setText(Integer.toString(flag[0]));
+     /*           qinF.setText(Integer.toString(flag[0]));
                 qiF.setText(Integer.toString(flag[1]));
                 chuF.setText(Integer.toString(flag[2]));
                 zhaoF.setText(Integer.toString(flag[3]));
                 hanF.setText(Integer.toString(flag[4]));
                 weiF.setText(Integer.toString(flag[5]));
-                yanF.setText(Integer.toString(flag[6]));
+                yanF.setText(Integer.toString(flag[6]));*/
+
+                qinF.setText(roundGains[0]);
+                qiF.setText(roundGains[1]);
+                chuF.setText(roundGains[2]);
+                zhaoF.setText(roundGains[3]);
+                hanF.setText(roundGains[4]);
+                weiF.setText(roundGains[5]);
+                yanF.setText(roundGains[6]);
+
             }
         }
         for(int y=0;y<c.length;y++)
