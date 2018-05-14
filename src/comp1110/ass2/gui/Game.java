@@ -84,7 +84,13 @@ public class Game extends Application {
 
     // FIXME Task 11: Allow players of your Warring States game to play against your simple agent
 
+    public char BotMove(){
+        return WarringStatesGame.generateMove(placement1);
+    }
+
+
     // FIXME Task 12: Integrate a more advanced opponent into your game
+
 
     void makePlacement(String placement) {
 
