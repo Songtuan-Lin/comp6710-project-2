@@ -665,57 +665,43 @@ public class WarringStatesGame {
         return result;
     }
 
-
-
-
-       /* String str[];
-        int count=0;
-        str = substr(placement);
-        int loccor[] = new int[2];
-        int zloc[] = new int[2];
-
-        zloc = transformCor(zLocation(placement));//transform ZhangYi's location to 2D index
-        int check = 0,sum=0;
-        char a[] = new char[str.length];
-        for(int x = 0 ; x<str.length; x++) {
-            if(str[x].charAt(0) != 'z' && check == 0)
+    public static int[][] getSupportersDetail(String setup, String moveSequence, int numPlayers)
+    {
+        int supporters[][] = new int[7][numPlayers];
+        for(int playerID = 0; playerID < numPlayers; playerID++)
+        {
+            String supportersStr = getSupporters(setup, moveSequence, numPlayers, playerID);
+            for(int i = 0; i < supportersStr.length(); i = i + 2)
             {
-                sum++;
-                continue;
+                String sub = supportersStr.substring(i, i + 2);
+                switch (sub.charAt(0))
+                {
+                    case 'a':
+                        supporters[0][playerID]++;
+                        break;
+                    case 'b':
+                        supporters[1][playerID]++;
+                        break;
+                    case 'c':
+                        supporters[2][playerID]++;
+                        break;
+                    case 'd':
+                        supporters[3][playerID]++;
+                        break;
+                    case 'e':
+                        supporters[4][playerID]++;
+                        break;
+                    case 'f':
+                        supporters[5][playerID]++;
+                        break;
+                    case 'g':
+                        supporters[6][playerID]++;
+                        break;
+                }
+
             }
-            else
-                check = 1;
-            for(int j=sum;j<str.length;j++)
-            a[j] = str[j].charAt(2);
         }
-        for(int x = 0 ;x<a.length;x++)
-        {
-            loccor = transformCor(a[x]);
-            if(!((a[x] >= 'A' && a[x] <= 'Z') || (a[x] >= '0' && a[x] <= '9')))
-                break;
-            else if(zloc[0] != loccor[0] && zloc[1] != loccor[1])
-                break;
-            else if(isEmptyLoc(placement, a[x]))
-                 break;
-            else
-                count++;
-
-        }
-        System.out.println(count);
-        if(count <= 1)
-        {
-            return '\0';
-        }else {
-            char r = str[count-1].charAt(2);
-            return r;
-        }
+        return supporters;
     }
-
-    public static void main(String[] args) {
-        String s = "a03b04z91a02b6U";
-        System.out.println(generateMove(s));
-
-    }*/
-
 
 }
