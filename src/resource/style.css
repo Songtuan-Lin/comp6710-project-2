@@ -1,0 +1,7 @@
+#pane{
+    -fx-background-image: url("C:\Users\RUFUS\IdeaProjects\comp1110-ass2-wed18c\src\resource\z9_background");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 900 506;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); 
+}
