@@ -1,8 +1,12 @@
 package comp1110.ass2.gui;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import comp1110.ass2.Card;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -19,6 +23,7 @@ import javafx.scene.media.AudioTrack;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -29,6 +34,7 @@ import java.util.Random;
 import comp1110.ass2.WarringStatesGame;
 
 import javafx.scene.media.AudioTrack;
+import jdk.nashorn.internal.runtime.Property;
 
 import static comp1110.ass2.WarringStatesGame.*;
 import static javafx.application.Platform.accessibilityActiveProperty;
@@ -47,6 +53,7 @@ public class Game extends Application {
     String boardMatrix[][];
     static String playerName[];
     VBox flags;
+    public Button button = new Button("Play");
     private static final String URI_BASE = "assets/";
     String placement1,setup;
     private static final Pane root = new Pane();
@@ -66,6 +73,9 @@ public class Game extends Application {
     static Label winnerID = new Label(" ");;
     String moveSequence = "";
     static int winner=0;
+    boolean check = true;
+    Thread t;
+    GridPane pane = new GridPane();
     static Text test=new Text(45,350,"");
     AudioClip click1 = new AudioClip("http://www.wavlist.com/soundfx/020/clock-tick1.wav");
     AudioClip scene1player = new AudioClip(this.getClass().getResource("/resource/Immigrant.mp3").toString());
@@ -113,17 +123,15 @@ public class Game extends Application {
 
     // FIXME Task 11: Allow players of your Warring States game to play against your simple agent
 
-    public char BotMove(){
-        return WarringStatesGame.generateMove(placement1);
-    }
-
 
     // FIXME Task 12: Integrate a more advanced opponent into your game
 
 
     void makePlacement(String placement) {
 
-
+        button.setDisable(false);
+        textField.setDisable(false);
+        textField.requestFocus();
 
 
         String sub[] = new String[placement.length() / 3];
@@ -218,10 +226,7 @@ public class Game extends Application {
         label1.setTextFill(Color.WHITE);
         textField = new TextField();
         textField.setPrefWidth(150);
-   //     textField.set
-        Button button = new Button("Play");
-
-
+   //     textField.se
         Button newGame = new Button("New Game");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -233,8 +238,9 @@ public class Game extends Application {
                     loki1.play();
                 if(mCount%7 == 0)
                     loki2.play();
-
                 getMove = textField.getText();
+
+                String validCheck  = textField.getText();
                 if (getMove.length() > 1)
                 {
                     textField.clear();
@@ -242,6 +248,15 @@ public class Game extends Application {
                 else
                 {
                     nextStep();
+                }
+                if(playerName[1].equals("Omega(AI)") && check)
+                {
+                            button.setDisable(true);
+                            textField.setDisable(true);
+                            getMove = BotMove()+"";
+                            delay(1000, new Runnable(){ public void run(){ nextStep();} });
+    //                        nextStep();
+
                 }
   //              gridPane.getChildren().clear();
   //              makePlacement(textField.getText());
@@ -256,8 +271,6 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent ke)
             {
-
-
                 if (ke.getCode().equals(KeyCode.ENTER))
                 {
                     click1.setVolume(0.3);
@@ -268,6 +281,7 @@ public class Game extends Application {
                     if(mCount%7 == 0)
                         loki2.play();
                     getMove = textField.getText();
+                    String validCheck  = textField.getText();
                     if (getMove.length() > 1)
                     {
                         textField.clear();
@@ -275,6 +289,14 @@ public class Game extends Application {
                     else
                     {
                         nextStep();
+                    }
+                    if(playerName[1].equals("Omega(AI)") && check)
+                    {
+                        button.setDisable(true);
+                        textField.setDisable(true);
+                        getMove = BotMove()+"";
+                        delay(1000, new Runnable(){ public void run(){ nextStep();} });
+       //                 nextStep();
                     }
                     //              gridPane.getChildren().clear();
                     //              makePlacement(textField.getText());
@@ -304,6 +326,22 @@ public class Game extends Application {
         controls.getChildren().add(hb1);
     }
 
+    public char BotMove()
+    {
+        return generateMove(placement1);
+    }
+
+    public static void delay(long delayMs, Runnable toRun){
+        Thread t = new Thread(new Runnable(){
+            public void run(){
+                try { Thread.sleep(delayMs); }catch(InterruptedException ignored){}
+                Platform.runLater(toRun);
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Comic Wars");
@@ -317,7 +355,7 @@ public class Game extends Application {
 
         gridPane.setLayoutX(100);
         gridPane.setLayoutY(10);
-
+     //   t = new Thread(sleeper);
         root.getChildren().add(gridPane);
 
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
@@ -376,11 +414,11 @@ public class Game extends Application {
 
         Button startGame = new Button("Start Game");
         Button mutemusic = new Button("Toggle Music");
-  //      Button soundeffect = new Button("Toggle Sfx");
+        Button reset = new Button("Reset");
         HBox sounds = new HBox();
         sounds.getChildren().addAll(mutemusic);
-        sounds.setSpacing(20);
-        sounds.setLayoutX(780);
+        sounds.setSpacing(40);
+        sounds.setLayoutX(850);
         sounds.setLayoutY(650);
         startGame.setLayoutX(480);
         startGame.setLayoutY(550);
@@ -439,16 +477,25 @@ public class Game extends Application {
         player.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if(player.getValue() == "1 Player")
+                {
+                    player2.setDisable(true);
+                    player3.setDisable(true);
+                    player4.setDisable(true);
+                }
                 if(player.getValue() == "2 Players")
                 {
                     player2.setDisable(false);
+                    player3.setDisable(true);
+                    player4.setDisable(true);
                 }
-                else if(player.getValue() == "3 players")
+                else if(player.getValue() == "3 Players")
                 {
                     player2.setDisable(false);
                     player3.setDisable(false);
+                    player4.setDisable(true);
                 }
-                else if(player.getValue() == "4 players")
+                else if(player.getValue() == "4 Players")
                 {
                     player2.setDisable(false);
                     player3.setDisable(false);
@@ -464,6 +511,12 @@ public class Game extends Application {
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+
+                createGrid();
+
+
+
+
                 click1.play();
                 scene1player.stop();
                 lokiIntro.play();
@@ -471,12 +524,13 @@ public class Game extends Application {
                 scene2player.play();
                 num_players = Integer.parseInt(player.getValue().toString().substring(0,1));
                 System.out.println("number of players"+num_players);
-                gridPane.setGridLinesVisible(true);
+  //              gridPane.setGridLinesVisible(true);
                 if(!player1.getText().equals(""))
                 playerName[0] = player1.getText();
                 if(num_players == 1)
                 {
                     playerName[1] = "Omega(AI)";
+                    num_players = 2;
                 }
                 if(num_players == 2)
                 {
@@ -515,19 +569,13 @@ public class Game extends Application {
                     }
                 });
 
-    /*            soundeffect.setOnAction(new EventHandler<ActionEvent>() {
+                reset.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if(click1.isPlaying())
-                        {
-                            System.out.println("This is the current volume"+click1.getVolume());
-                            click1.setVolume(0);
-                        }
-                        else
-                            click1.setVolume(1.0);
+                    primaryStage.setScene(intro);
                     }
                 });
-*/
+
      /*           gridPane.getChildren().clear();
                 if(num_players == 1 || num_players == 2)
                     playerIDs.getChildren().addAll(p1,p2);
@@ -558,6 +606,38 @@ public class Game extends Application {
         primaryStage.setScene(intro);
         primaryStage.show();
 
+    }
+
+    public void createGrid()
+    {
+        String array[][] = {
+                {"4","5","6","7","8","9"},
+                {"Y","Z","0","1","2","3"},
+                {"S","T","U","V","W","X"},
+                {"M","N","O","P","Q","R"},
+                {"G","H","I","J","K","L"},
+                {"A","B","C","D","E","F"}
+        };
+   //     GridPane pane = new GridPane();
+        Label setupDisplay = new Label("Board Layout = ");
+        setupDisplay.setLayoutX(740);
+        setupDisplay.setLayoutY(530);
+        setupDisplay.setTextFill(Color.WHITE);
+        setupDisplay.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        pane.setLayoutX(860);
+        pane.setLayoutY(480);
+        pane.setStyle("-fx-background-color: Black; -fx-border-color: Black");
+        root.getChildren().add(pane);
+        root.getChildren().add(setupDisplay);
+        for (int x = 0; x < array.length; x++){
+            for (int y = 0; y < array[x].length; y++){
+                Label label = new Label(array[x][y], new Rectangle(8, 8));
+                label.setTextFill(Color.WHITE);
+                label.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+
+                pane.add(label, x, y);
+            }
+        }
     }
 
 
@@ -697,8 +777,8 @@ public class Game extends Application {
 
     public void nextStep() {
         String move = "z9"+getMove;
-        boolean check = true;
-        System.out.println(move);
+        System.out.println("This is the value of getMove"+move);
+  //      System.out.println(move);
         boolean isEnd = true;
         if(!getMove.equals("")) {
             check = isMoveLegal(placement1, getMove.charAt(0));
@@ -718,19 +798,19 @@ public class Game extends Application {
                 flag = getFlags(setup, moveSequence, num_players);
                 for (int i = 0; i < flag.length; i++) {
                     if (flag[i] == -1) {
-                        flag[i] = 0;
+  //                      flag[i] = 0;
                         roundGains[i] = " ";
                     } else if (flag[i] == 0) {
-                        flag[i] = 1;
+  //                      flag[i] = 1;
                         roundGains[i] = playerName[0];
                     } else if (flag[i] == 1) {
-                        flag[i] = 2;
+ //                       flag[i] = 2;
                         roundGains[i] = playerName[1];
                     } else if (flag[i] == 2) {
-                        flag[i] = 3;
+ //                       flag[i] = 3;
                         roundGains[i] = playerName[2];
                     } else if (flag[i] == 3) {
-                        flag[i] = 4;
+ //                       flag[i] = 4;
                         roundGains[i] = playerName[3];
                     }
                 }
@@ -753,6 +833,8 @@ public class Game extends Application {
 
             }
         }
+        else
+            check = false;
         for(int y=0;y<c.length;y++)
             if(isMoveLegal(placement1,c[y]))
                 isEnd = false;
