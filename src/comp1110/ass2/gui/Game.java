@@ -74,6 +74,7 @@ public class Game extends Application {
     String moveSequence = "";
     static int winner=0;
     boolean check = true;
+    boolean botPlay = true;
     Thread t;
     GridPane pane = new GridPane();
     static Text test=new Text(45,350,"");
@@ -81,8 +82,12 @@ public class Game extends Application {
     AudioClip scene1player = new AudioClip(this.getClass().getResource("/resource/Immigrant.mp3").toString());
     AudioClip scene2player = new AudioClip(this.getClass().getResource("/resource/z_avengers.mp3").toString());
     AudioClip lokiIntro = new AudioClip(this.getClass().getResource("/resource/LokiIntro.wav").toString());
+    AudioClip lokiIntro1 = new AudioClip(this.getClass().getResource("/resource/LokiIntroTalk.wav").toString());
     AudioClip loki1 = new AudioClip(this.getClass().getResource("/resource/Loki1.wav").toString());
     AudioClip loki2 = new AudioClip(this.getClass().getResource("/resource/Loki2.wav").toString());
+    AudioClip loki3 = new AudioClip(this.getClass().getResource("/resource/Loki3.wav").toString());
+    AudioClip loki4 = new AudioClip(this.getClass().getResource("/resource/Loki4.wav").toString());
+    AudioClip loki5 = new AudioClip(this.getClass().getResource("/resource/Loki5.wav").toString());
     AudioClip lokiEnding = new AudioClip(this.getClass().getResource("/resource/LokiEnding.wav").toString());
     AudioClip click2 = new AudioClip(this.getClass().getResource("/resource/clicksound.mp3").toString());
 /*    String scene1Music = "/resource/scene1.mp3";     // For example
@@ -221,6 +226,8 @@ public class Game extends Application {
         }
         return sub;
     }
+
+    int numOfTimes = 0;
     private void makeControls() {
         Label label1 = new Label("Player Move:");
         label1.setTextFill(Color.WHITE);
@@ -232,12 +239,30 @@ public class Game extends Application {
             @Override
             public void handle(ActionEvent e) {
                 click1.setVolume(0.3);
+                numOfTimes = 0;
                 click1.play();
                 mCount=mCount+1;
-                if(mCount%3 == 0)
+                if(mCount%3 == 0 && numOfTimes == 0) {
                     loki1.play();
-                if(mCount%7 == 0)
+                    numOfTimes = 1;
+                }
+                if(mCount%5 == 0 && numOfTimes == 0){
                     loki2.play();
+                    numOfTimes = 1;
+                }
+                if(mCount%7 == 0 && numOfTimes == 0){
+                    loki3.play();
+                    numOfTimes = 1;
+                }
+                if(mCount%11 == 0 && numOfTimes == 0){
+                    loki4.play();
+                    numOfTimes = 1;
+                }
+                if(mCount%13 == 0 && numOfTimes == 0){
+                    loki5.play();
+                    numOfTimes = 1;
+                }
+
                 getMove = textField.getText();
 
                 String validCheck  = textField.getText();
@@ -249,7 +274,7 @@ public class Game extends Application {
                 {
                     nextStep();
                 }
-                if(playerName[1].equals("Omega(AI)") && check)
+                if(playerName[1].equals("Omega(AI)") && check && botPlay)
                 {
                             button.setDisable(true);
                             textField.setDisable(true);
@@ -276,10 +301,27 @@ public class Game extends Application {
                     click1.setVolume(0.3);
                     click1.play();
                     mCount=mCount+1;
-                    if(mCount%3 == 0)
+                    numOfTimes = 0;
+                    if(mCount%3 == 0 && numOfTimes == 0) {
                         loki1.play();
-                    if(mCount%7 == 0)
+                        numOfTimes = 1;
+                    }
+                    if(mCount%5 == 0 && numOfTimes == 0){
                         loki2.play();
+                        numOfTimes = 1;
+                    }
+                    if(mCount%7 == 0 && numOfTimes == 0){
+                        loki3.play();
+                        numOfTimes = 1;
+                    }
+                    if(mCount%11 == 0 && numOfTimes == 0){
+                        loki4.play();
+                        numOfTimes = 1;
+                    }
+                    if(mCount%13 == 0 && numOfTimes == 0){
+                        loki5.play();
+                        numOfTimes = 1;
+                    }
                     getMove = textField.getText();
                     String validCheck  = textField.getText();
                     if (getMove.length() > 1)
@@ -290,7 +332,7 @@ public class Game extends Application {
                     {
                         nextStep();
                     }
-                    if(playerName[1].equals("Omega(AI)") && check)
+                    if(playerName[1].equals("Omega(AI)") && check && botPlay)
                     {
                         button.setDisable(true);
                         textField.setDisable(true);
@@ -420,7 +462,7 @@ public class Game extends Application {
         sounds.setSpacing(40);
         sounds.setLayoutX(850);
         sounds.setLayoutY(650);
-        startGame.setLayoutX(480);
+        startGame.setLayoutX(500);
         startGame.setLayoutY(550);
         player.setItems(FXCollections.observableArrayList(
                 "1 Player","2 Players","3 Players","4 Players"));
@@ -428,7 +470,7 @@ public class Game extends Application {
         selection.setLayoutX(VIEWER_HEIGHT/2);
         selection.setLayoutY(VIEWER_WIDTH/2);
         player.setLayoutY(250);
-        player.setLayoutX(475);
+        player.setLayoutX(500);
         VBox playerLabels = new VBox();
         Label player1name = new Label("Player 1");
         Label player2name = new Label("Player 2");
@@ -447,11 +489,11 @@ public class Game extends Application {
         player2.setDisable(true);
         player3.setDisable(true);
         player4.setDisable(true);
-        playerLabels.setLayoutX(390);
+        playerLabels.setLayoutX(400);
         playerLabels.setLayoutY(300);
         playerLabels.setSpacing(30);
         playerLabels.getChildren().addAll(player1name,player2name,player3name,player4name);
-        playernames.setLayoutX(445);
+        playernames.setLayoutX(465);
         playernames.setLayoutY(300);
         playernames.getChildren().addAll(player1,player2,player3,player4);
         playernames.setSpacing(20);
@@ -604,6 +646,7 @@ public class Game extends Application {
     //    primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setScene(intro);
+        primaryStage.getIcons().add(new Image("/resource/comicwars.JPG"));
         primaryStage.show();
 
     }
@@ -674,6 +717,7 @@ public class Game extends Application {
         test.setText("Player "+winnername+" is the Winner!");
         end.scene2player.setVolume(0.08);
         end.lokiEnding.play();
+        end.scene2player.stop();
         test.setLayoutX(0);
         test.setLayoutY(0);
         test.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
@@ -838,7 +882,10 @@ public class Game extends Application {
         for(int y=0;y<c.length;y++)
             if(isMoveLegal(placement1,c[y]))
                 isEnd = false;
-        if(isEnd == true)
+        if(isEnd == true) {
             winner();
+            botPlay = false;
+        }
+
     }
 }
