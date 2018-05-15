@@ -47,6 +47,7 @@ public class Game extends Application {
     private static final int BOARD_HEIGHT = 700;
     Card p = new Card();
     String getMove;
+    String getBotMove;
     GridPane gridPane = new GridPane();
     private static final int VIEWER_WIDTH = 1033;
     private static final int VIEWER_HEIGHT = 700;
@@ -60,6 +61,7 @@ public class Game extends Application {
     private final Pane introroot = new Pane();
     private final Group controls = new Group();
     static int flag[] = new int[7];
+    static int botFlag[][] = new int[7][7];
     static String roundGains[] = new String[7];
     TextField textField,player1,player2,player3,player4;
     Label qinF  = new Label(" ");
@@ -72,6 +74,7 @@ public class Game extends Application {
     int mCount = 0;
     static Label winnerID = new Label(" ");;
     String moveSequence = "";
+    String botMoveSequence = "";
     static int winner=0;
     boolean check = true;
     boolean botPlay = true;
@@ -238,55 +241,7 @@ public class Game extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                click1.setVolume(0.3);
-                numOfTimes = 0;
-                click1.play();
-                mCount=mCount+1;
-                if(mCount%5 == 0 && numOfTimes == 0) {
-                    loki1.play();
-                    numOfTimes = 1;
-                }
-                if(mCount%7 == 0 && numOfTimes == 0){
-                    loki2.play();
-                    numOfTimes = 1;
-                }
-                if(mCount%9 == 0 && numOfTimes == 0){
-                    loki3.play();
-                    numOfTimes = 1;
-                }
-                if(mCount%11 == 0 && numOfTimes == 0){
-                    loki4.play();
-                    numOfTimes = 1;
-                }
-                if(mCount%13 == 0 && numOfTimes == 0){
-                    loki5.play();
-                    numOfTimes = 1;
-                }
-
-                getMove = textField.getText();
-
-                String validCheck  = textField.getText();
-                if (getMove.length() > 1)
-                {
-                    textField.clear();
-                }
-                else
-                {
-                    nextStep();
-                }
-                if(playerName[1].equals("Omega(AI)") && check && botPlay)
-                {
-                            button.setDisable(true);
-                            textField.setDisable(true);
-                            getMove = BotMove()+"";
-                            delay(1000, new Runnable(){ public void run(){ nextStep();} });
-    //                        nextStep();
-
-                }
-  //              gridPane.getChildren().clear();
-  //              makePlacement(textField.getText());
-
-                textField.clear();
+                singleMove();
               //  click2.stop();
             }
         });
@@ -298,52 +253,7 @@ public class Game extends Application {
             {
                 if (ke.getCode().equals(KeyCode.ENTER))
                 {
-                    click1.setVolume(0.3);
-                    click1.play();
-                    mCount=mCount+1;
-                    numOfTimes = 0;
-                    if(mCount%5 == 0 && numOfTimes == 0) {
-                        loki1.play();
-                        numOfTimes = 1;
-                    }
-                    if(mCount%7 == 0 && numOfTimes == 0){
-                        loki2.play();
-                        numOfTimes = 1;
-                    }
-                    if(mCount%9 == 0 && numOfTimes == 0){
-                        loki3.play();
-                        numOfTimes = 1;
-                    }
-                    if(mCount%11 == 0 && numOfTimes == 0){
-                        loki4.play();
-                        numOfTimes = 1;
-                    }
-                    if(mCount%13 == 0 && numOfTimes == 0){
-                        loki5.play();
-                        numOfTimes = 1;
-                    }
-                    getMove = textField.getText();
-                    String validCheck  = textField.getText();
-                    if (getMove.length() > 1)
-                    {
-                        textField.clear();
-                    }
-                    else
-                    {
-                        nextStep();
-                    }
-                    if(playerName[1].equals("Omega(AI)") && check && botPlay)
-                    {
-                        button.setDisable(true);
-                        textField.setDisable(true);
-                        getMove = BotMove()+"";
-                        delay(1000, new Runnable(){ public void run(){ nextStep();} });
-       //                 nextStep();
-                    }
-                    //              gridPane.getChildren().clear();
-                    //              makePlacement(textField.getText());
-
-                    textField.clear();
+                    singleMove();
                 }
             }
         });
@@ -366,6 +276,86 @@ public class Game extends Application {
         hb.setLayoutY(VIEWER_HEIGHT-50);
         controls.getChildren().add(hb);
         controls.getChildren().add(hb1);
+    }
+
+    private void singleMove() {
+        click1.setVolume(0.3);
+        click1.play();
+        mCount=mCount+1;
+        numOfTimes = 0;
+        if(mCount%5 == 0 && numOfTimes == 0) {
+            loki1.play();
+            numOfTimes = 1;
+        }
+        if(mCount%7 == 0 && numOfTimes == 0){
+            loki2.play();
+            numOfTimes = 1;
+        }
+        if(mCount%9 == 0 && numOfTimes == 0){
+            loki3.play();
+            numOfTimes = 1;
+        }
+        if(mCount%11 == 0 && numOfTimes == 0){
+            loki4.play();
+            numOfTimes = 1;
+        }
+        if(mCount%13 == 0 && numOfTimes == 0){
+            loki5.play();
+            numOfTimes = 1;
+        }
+        getMove = textField.getText();
+        String validCheck  = textField.getText();
+        if (getMove.length() > 1)
+        {
+            textField.clear();
+        }
+        else
+        {
+            nextStep();
+        }
+        if(playerName[1].equals("Omega(AI)") && check && botPlay)
+        {
+            button.setDisable(true);
+            textField.setDisable(true);
+            getMove = BotMove()+"";
+            delay(1000, new Runnable(){ public void run(){ nextStep();} });
+//                 nextStep();
+        }
+        //              gridPane.getChildren().clear();
+        //              makePlacement(textField.getText());
+        textField.clear();
+        if(playerName[1].equals("Omega(AI)") && check && botPlay)
+        {
+          //  advancedAI();
+        }
+
+    }
+
+    public void advancedAI()
+    {
+        getMove = BotMove()+"";
+        botMoveSequence = botMoveSequence+getMove.charAt(0);
+//        botFlag[y] = getFlags(setup, moveSequence, 2);
+        int x=0;
+        char possible[] = new char[10];
+        for(int y=0;y<c[y];y++) {
+            if (isMoveLegal(placement1, c[y])) {
+                possible[x] = c[y];
+                x++;
+            }
+        }
+        for(int y=0;y<possible.length;y++)
+        {
+            botMoveSequence = botMoveSequence+possible[y];
+
+        }
+
+        button.setDisable(true);
+        textField.setDisable(true);
+        getMove = BotMove()+"";
+        int bestVal = Integer.MIN_VALUE;
+        delay(1000, new Runnable(){ public void run(){ nextStep();} });
+//                 nextStep();
     }
 
     public char BotMove()
