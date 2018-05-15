@@ -242,15 +242,15 @@ public class Game extends Application {
                 numOfTimes = 0;
                 click1.play();
                 mCount=mCount+1;
-                if(mCount%3 == 0 && numOfTimes == 0) {
+                if(mCount%5 == 0 && numOfTimes == 0) {
                     loki1.play();
                     numOfTimes = 1;
                 }
-                if(mCount%5 == 0 && numOfTimes == 0){
+                if(mCount%7 == 0 && numOfTimes == 0){
                     loki2.play();
                     numOfTimes = 1;
                 }
-                if(mCount%7 == 0 && numOfTimes == 0){
+                if(mCount%9 == 0 && numOfTimes == 0){
                     loki3.play();
                     numOfTimes = 1;
                 }
@@ -302,15 +302,15 @@ public class Game extends Application {
                     click1.play();
                     mCount=mCount+1;
                     numOfTimes = 0;
-                    if(mCount%3 == 0 && numOfTimes == 0) {
+                    if(mCount%5 == 0 && numOfTimes == 0) {
                         loki1.play();
                         numOfTimes = 1;
                     }
-                    if(mCount%5 == 0 && numOfTimes == 0){
+                    if(mCount%7 == 0 && numOfTimes == 0){
                         loki2.play();
                         numOfTimes = 1;
                     }
-                    if(mCount%7 == 0 && numOfTimes == 0){
+                    if(mCount%9 == 0 && numOfTimes == 0){
                         loki3.play();
                         numOfTimes = 1;
                     }
@@ -455,7 +455,7 @@ public class Game extends Application {
         playerIDs.setLayoutY(10);
 
         Button startGame = new Button("Start Game");
-        Button mutemusic = new Button("Toggle Music");
+        Button mutemusic = new Button("Music On/Off");
         Button reset = new Button("Reset");
         HBox sounds = new HBox();
         sounds.getChildren().addAll(mutemusic);
@@ -627,6 +627,7 @@ public class Game extends Application {
                     System.out.println(num_players);
                     playerIDs.getChildren().addAll(p1, p2, p3, p4);
                 }*/
+
                 playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
@@ -762,7 +763,7 @@ public class Game extends Application {
                         {p.z9}
                 };
 
-        placement1 = PLACEMENTS[0];
+        placement1 = PLACEMENTS[selector];
         String [] sub = substr(placement1);
 
         for (int y = 0; y < sub.length; y++) {
