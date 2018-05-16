@@ -1,7 +1,8 @@
 package comp1110.ass2.gui;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+//import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import comp1110.ass2.Card;
+import java.util.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -31,11 +32,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Random;
 import comp1110.ass2.WarringStatesGame;
 
 import javafx.scene.media.AudioTrack;
-import jdk.nashorn.internal.runtime.Property;
+//import jdk.nashorn.internal.runtime.Property;
 
 import javax.jws.soap.SOAPBinding;
 
@@ -324,8 +326,9 @@ public class Game extends Application {
         {
             button.setDisable(true);
             textField.setDisable(true);
-            getMove = BotMove()+"";
+            getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
             delay(1000, new Runnable(){ public void run(){ nextStep();} });
+            //nextStep();
         }
         textField.clear();
         if(playerName[1].equals("Omega(AI)") && check && botPlay)
@@ -337,6 +340,7 @@ public class Game extends Application {
 
     public void advancedAI()
     {
+        /*
         getMove = BotMove()+"";
         botMoveSequence = botMoveSequence+getMove.charAt(0);
 //        botFlag[y] = getFlags(setup, moveSequence, 2);
@@ -360,6 +364,7 @@ public class Game extends Application {
         int bestVal = Integer.MIN_VALUE;
         delay(1000, new Runnable(){ public void run(){ nextStep();} });
 //                 nextStep();
+        */
     }
 
     public char BotMove()
@@ -421,8 +426,7 @@ public class Game extends Application {
         Label han  = new Label("Han :");
         Label wei  = new Label("Wei :");
         Label yan  = new Label("Yan :");
-        Label p1   = new Label("Player Name");
-        Label c1   = new Label("Total Cards");
+        Label p1   = new Label("Player IDs");
         qin.setTextFill(Color.WHITE);
         qi.setTextFill(Color.WHITE);
         chu.setTextFill(Color.WHITE);
@@ -431,9 +435,7 @@ public class Game extends Application {
         wei.setTextFill(Color.WHITE);
         yan.setTextFill(Color.WHITE);
         p1.setTextFill(Color.WHITE);
-        p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 13));
-        c1.setTextFill(Color.WHITE);
-        c1.setFont(Font.font("Arial Black", FontWeight.BOLD, 13));
+        p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
 
 
 
@@ -949,4 +951,106 @@ public class Game extends Application {
 
         return numofcards.length;
     }
+
+    char alpha_beta_search(String placement, String[][] boardState)
+    {
+        List<Character> moveList = WarringStatesGame.LegalMoves(placement);
+        String nextState[][];
+        String nextPlacement;
+        int deep = 0;
+        int finalValue = -10;
+        int value;
+        int alpha = -10, beta = 10;
+        char nextMove = 'A';
+        boolean limit = true;
+        if(placement.length() < 72)
+            limit = false;
+        for(char move : moveList)
+        {
+            String newMovesequence = this.moveSequence + move;
+            nextState = WarringStatesGame.oneMoveGame(move, placement, boardState);
+            nextPlacement = WarringStatesGame.matrixToString(nextState);
+            value = max_value(nextPlacement, nextState, newMovesequence, alpha, beta, deep + 1, limit);
+            if(finalValue < value)
+            {
+                finalValue = value;
+                nextMove = move;
+            }
+        }
+        return nextMove;
+    }
+
+    int min_value(String placement, String[][] boardState, String oldMoveSequence, int alpha, int beta, int deep, boolean limit)
+    {
+        int minValue = 10;
+        int value;
+        List<Character> moveList = WarringStatesGame.LegalMoves(placement);
+        String nextState[][];
+        String nextPlacement;
+        if(moveList.size() == 0)
+            return getUtility(oldMoveSequence);
+        else if(deep > 12 && limit == true)
+            return getUtility(oldMoveSequence);
+        for(char move : moveList)
+        {
+            String newMovesequence = oldMoveSequence + move;
+            nextState = WarringStatesGame.oneMoveGame(move, placement, boardState);
+            nextPlacement = WarringStatesGame.matrixToString(nextState);
+            value = max_value(nextPlacement, nextState, newMovesequence, alpha, beta, deep + 1, limit);
+            if(value <= alpha)
+                return value;
+            if(value < minValue)
+                minValue = value;
+            if(value < beta)
+                beta = value;
+        }
+        return minValue;
+    }
+
+    int max_value(String placement, String[][] boardState, String oldMovesequence, int alpha, int beta, int deep, boolean limit)
+    {
+        int maxValue = 10;
+        int value;
+        List<Character> moveList = WarringStatesGame.LegalMoves(placement);
+        String nextState[][];
+        String nextPlacement;
+        if(moveList.size() == 0)
+            return getUtility(oldMovesequence);
+        else if(deep > 12 && limit == true)
+            return getUtility(oldMovesequence);
+        for(char move : moveList)
+        {
+            String newMovesequence = oldMovesequence + move;
+            nextState = WarringStatesGame.oneMoveGame(move, placement, boardState);
+            nextPlacement = WarringStatesGame.matrixToString(nextState);
+            value = min_value(nextPlacement, nextState, newMovesequence, alpha, beta, deep + 1, limit);
+            if(value >= beta)
+                return value;
+            if(value > maxValue)
+                maxValue = value;
+            if(value > alpha)
+                alpha = value;
+        }
+        return maxValue;
+    }
+
+    int getUtility(String moveSequence)
+    {
+        int flag[] = WarringStatesGame.getFlags(this.setup, moveSequence, 2);
+        int player1 = 0;
+        int player2 = 0;
+        for(int i = 0; i < flag.length; i++)
+        {
+            if(flag[i] == 0)
+                player1++;
+            else if(flag[i] == 1)
+                player2++;
+        }
+        if(player2 >= player1)
+            return 1;
+        else
+            return -1;
+    }
+
+
 }
