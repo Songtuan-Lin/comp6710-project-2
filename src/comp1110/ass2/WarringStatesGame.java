@@ -587,7 +587,10 @@ public class WarringStatesGame {
             //if the the number of supporters for this kingdom this player hold is greater than the orignal holder
             //for this kingdom, replace it
             if (flag[(int) (deKingdom - 97)] == -1)
+            {
+                //System.out.println(moveSequence);
                 flag[(int) (deKingdom - 97)] = i % numPlayers;
+            }
             else if (player[i % numPlayers].getNumSup(deKingdom) >= player[flag[(int) (deKingdom - 97)]].getNumSup(deKingdom))
                 flag[(int) (deKingdom - 97)] = i % numPlayers;
         }
@@ -702,6 +705,73 @@ public class WarringStatesGame {
             }
         }
         return supporters;
+    }
+
+    public static String[][] oneMoveGame(char charLocation, String placement, String[][] old_boardMatrix)
+    {
+        //change the board state according to current move char
+        //the parameter are follow:
+        //@charLocation: the destination location
+        //@placement: placement string
+        //boardMatrix: matrix represent current board state
+        //return a matrix that represent new board state after current move
+        String boardMatrix[][] = new String[6][6];
+        for(int i = 0; i < 6; i++)
+            for(int j = 0; j < 6; j++)
+                boardMatrix[i][j] = old_boardMatrix[i][j];
+        int cor[] = transformCor(charLocation);
+        char zhangLocChar = zLocation(placement);
+        int zhangLocCor[] = transformCor(zhangLocChar);
+        char kingdom = getKingdom(charLocation, placement);
+        if(zhangLocCor[0] == cor[0])
+        {
+            //if destination location is in the same row as ZhangYi's location
+            if(zhangLocCor[1] > cor[1])
+            {
+                for(int col = zhangLocCor[1] - 1; col >= cor[1]; col--)
+                {
+                    //start from ZhangYi's location to destination location
+                    //determine whether this location has the same kingdom as destination location
+                    if(isSameKingdom(kingdom, placement, corTochar(col, zhangLocCor[0])))
+                        boardMatrix[zhangLocCor[0]][col] = "";
+                }
+            }
+            else if(zhangLocCor[1] < cor[1])
+            {
+                for(int col = zhangLocCor[1] + 1; col <= cor[1]; col++)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(col, zhangLocCor[0])))
+                        //if the kindome is same, set the element in this location to ""
+                        boardMatrix[zhangLocCor[0]][col] = "";
+                }
+            }
+        }
+        else if(zhangLocCor[1] == cor[1])
+        {
+            //if destination location is in the same column as ZhangYi's location
+            if(zhangLocCor[0] > cor[0])
+            {
+                for(int row = zhangLocCor[0] - 1; row >= cor[0]; row--)
+                {
+                    //start from ZhangYi's location to destination location
+                    //determine whether this location has the same kingdom as destination location
+                    if(isSameKingdom(kingdom, placement, corTochar(zhangLocCor[1], row)))
+                        //if the kindome is same, set the element in this location to ""
+                        boardMatrix[row][zhangLocCor[1]] = "";
+                }
+            }
+            else if(zhangLocCor[0] < cor[0])
+            {
+                for(int row = zhangLocCor[0] + 1; row <= cor[0]; row++)
+                {
+                    if(isSameKingdom(kingdom, placement, corTochar(zhangLocCor[1], row)))
+                        boardMatrix[row][zhangLocCor[1]] = "";
+                }
+            }
+        }
+        boardMatrix[zhangLocCor[0]][zhangLocCor[1]] = "";
+        boardMatrix[cor[0]][cor[1]] = "z9";
+        return boardMatrix;
     }
 
 }
