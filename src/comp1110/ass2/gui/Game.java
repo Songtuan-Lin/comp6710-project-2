@@ -27,6 +27,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -35,6 +36,8 @@ import comp1110.ass2.WarringStatesGame;
 
 import javafx.scene.media.AudioTrack;
 import jdk.nashorn.internal.runtime.Property;
+
+import javax.jws.soap.SOAPBinding;
 
 import static comp1110.ass2.WarringStatesGame.*;
 import static javafx.application.Platform.accessibilityActiveProperty;
@@ -62,6 +65,7 @@ public class Game extends Application {
     private final Group controls = new Group();
     static int flag[] = new int[7];
     static int botFlag[][] = new int[7][7];
+    public int cardCount[] = new int[7];
     static String roundGains[] = new String[7];
     TextField textField,player1,player2,player3,player4;
     Label qinF  = new Label(" ");
@@ -72,12 +76,15 @@ public class Game extends Application {
     Label weiF   = new Label(" "); 
     Label yanF   = new Label(" ");
     int mCount = 0;
+    int titanCount = 0;
     static Label winnerID = new Label(" ");;
     String moveSequence = "";
     String botMoveSequence = "";
     static int winner=0;
+    public int player =-1;
     boolean check = true;
     boolean botPlay = true;
+    boolean titan = false;
     Thread t;
     GridPane pane = new GridPane();
     static Text test=new Text(45,350,"");
@@ -160,7 +167,7 @@ public class Game extends Application {
                         {p.z9}
                 };
 
-        sub = substr(placement);
+        sub = substr(placement,3);
 
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
@@ -219,12 +226,12 @@ public class Game extends Application {
 
     }
 
-    private String[] substr(String placement)
+    private String[] substr(String placement,int pos)
     {
         int count =0;
-        String sub[] = new String[placement.length()/3];
-        for (int x = 0; x < placement.length(); x += 3) {
-            sub[count] = placement.substring(x, x + 3);
+        String sub[] = new String[placement.length()/pos];
+        for (int x = 0; x < placement.length(); x += pos) {
+            sub[count] = placement.substring(x, x + pos);
             count++;
         }
         return sub;
@@ -241,8 +248,8 @@ public class Game extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                if(!textField.getText().equals("") || !textField.getText().equals(" "))
                 singleMove();
-              //  click2.stop();
             }
         });
 
@@ -251,7 +258,7 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent ke)
             {
-                if (ke.getCode().equals(KeyCode.ENTER))
+                if (ke.getCode().equals(KeyCode.ENTER) && (!textField.getText().equals("") || !textField.getText().equals(" ")))
                 {
                     singleMove();
                 }
@@ -319,10 +326,7 @@ public class Game extends Application {
             textField.setDisable(true);
             getMove = BotMove()+"";
             delay(1000, new Runnable(){ public void run(){ nextStep();} });
-//                 nextStep();
         }
-        //              gridPane.getChildren().clear();
-        //              makePlacement(textField.getText());
         textField.clear();
         if(playerName[1].equals("Omega(AI)") && check && botPlay)
         {
@@ -417,7 +421,8 @@ public class Game extends Application {
         Label han  = new Label("Han :");
         Label wei  = new Label("Wei :");
         Label yan  = new Label("Yan :");
-        Label p1   = new Label("Player IDs");
+        Label p1   = new Label("Player Name");
+        Label c1   = new Label("Total Cards");
         qin.setTextFill(Color.WHITE);
         qi.setTextFill(Color.WHITE);
         chu.setTextFill(Color.WHITE);
@@ -426,7 +431,9 @@ public class Game extends Application {
         wei.setTextFill(Color.WHITE);
         yan.setTextFill(Color.WHITE);
         p1.setTextFill(Color.WHITE);
-        p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 13));
+        c1.setTextFill(Color.WHITE);
+        c1.setFont(Font.font("Arial Black", FontWeight.BOLD, 13));
 
 
 
@@ -445,6 +452,7 @@ public class Game extends Application {
         playerIDs.setLayoutY(10);
 
         Button startGame = new Button("Start Game");
+        Button help = new Button("Instructions");
         Button mutemusic = new Button("Music On/Off");
         Button reset = new Button("Reset");
         HBox sounds = new HBox();
@@ -452,8 +460,10 @@ public class Game extends Application {
         sounds.setSpacing(40);
         sounds.setLayoutX(850);
         sounds.setLayoutY(650);
-        startGame.setLayoutX(500);
+        startGame.setLayoutX(450);
         startGame.setLayoutY(550);
+        help.setLayoutX(550);
+        help.setLayoutY(550);
         player.setItems(FXCollections.observableArrayList(
                 "1 Player","2 Players","3 Players","4 Players"));
         player.setValue("1 Player");
@@ -502,6 +512,7 @@ public class Game extends Application {
         scene1player.play();
         introroot.getChildren().add(player);
         introroot.getChildren().add(startGame);
+        introroot.getChildren().add(help);
    //     selection.getChildren().addAll(startGame);
    //     selection.setSpacing(50);
 
@@ -553,6 +564,7 @@ public class Game extends Application {
                 scene1player.stop();
                 lokiIntro.play();
                 scene2player.setVolume(0.1);
+                scene2player.setCycleCount(AudioClip.INDEFINITE);
                 scene2player.play();
                 num_players = Integer.parseInt(player.getValue().toString().substring(0,1));
                 System.out.println("number of players"+num_players);
@@ -631,6 +643,24 @@ public class Game extends Application {
                 setup = placement1;
                 boardMatrix = createMatrix(placement1);
                 primaryStage.setScene(scene);
+            }
+        });
+
+        help.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                final Stage helpScreen = new Stage();
+                Image helpS = new Image("/resource/z11_background.jpg");
+                helpScreen.initModality(Modality.APPLICATION_MODAL);
+                helpScreen.initOwner(primaryStage);
+                Pane insts = new Pane();
+                Scene dialogScene = new Scene(insts, 1300, 730);
+                insts.setBackground(new Background(new BackgroundImage(helpS,
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.CENTER,
+                        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true))));
+                helpScreen.setScene(dialogScene);
+                helpScreen.show();
             }
         });
         makeControls();
@@ -754,7 +784,7 @@ public class Game extends Application {
                 };
 
         placement1 = PLACEMENTS[selector];
-        String [] sub = substr(placement1);
+        String [] sub = substr(placement1,3);
 
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
@@ -812,8 +842,6 @@ public class Game extends Application {
 
     public void nextStep() {
         String move = "z9"+getMove;
-        System.out.println("This is the value of getMove"+move);
-  //      System.out.println(move);
         boolean isEnd = true;
         if(!getMove.equals("")) {
             check = isMoveLegal(placement1, getMove.charAt(0));
@@ -825,38 +853,58 @@ public class Game extends Application {
                 System.out.println("Placement before the move " + placement1);
                 boolean val = isPlacementWellFormed(placement1);
                 if (val) {
-                    System.out.println("Made it here");
                     makePlacement(placement1);
                 } else
                     exit();
                 moveSequence = moveSequence + getMove;
+    /*            if(player >= (num_players-1))
+                {
+                    player = 0;
+                }
+                else
+                player = player+1;
+    */
+     //           System.out.println("This was player:"+(player+1)+" move");
                 flag = getFlags(setup, moveSequence, num_players);
                 for (int i = 0; i < flag.length; i++) {
                     if (flag[i] == -1) {
-  //                      flag[i] = 0;
                         roundGains[i] = " ";
                     } else if (flag[i] == 0) {
-  //                      flag[i] = 1;
-                        roundGains[i] = playerName[0];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+    /*                    if(titan && player!=flag[i] && cardCount[flag[i]]!=0)
+                        {
+                            cardCount[flag[i]] = cardCount[flag[i]]-1;
+                            titan = false;
+                            System.out.println("reduced because of Thanos");
+                        }
+    */                    roundGains[i] = playerName[flag[i]]+" ("+cardCount[flag[i]]+")";
                     } else if (flag[i] == 1) {
- //                       flag[i] = 2;
-                        roundGains[i] = playerName[1];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+    /*                    if(titan && player!=flag[i] && cardCount[flag[i]]!=0)
+                        {
+                            cardCount[flag[i]] = cardCount[flag[i]]-1;
+                            titan = false;
+                            System.out.println("reduced because of Thanos");
+                        }
+    */                    roundGains[i] = playerName[flag[i]]+" ("+cardCount[flag[i]]+")";
                     } else if (flag[i] == 2) {
- //                       flag[i] = 3;
-                        roundGains[i] = playerName[2];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+     /*                   if(titan && player!=flag[i] && cardCount[flag[i]]!=0)
+                        {
+                            cardCount[flag[i]] = cardCount[flag[i]]-1;
+                            titan = false;
+                        }
+      */                  roundGains[i] = playerName[flag[i]]+" ("+cardCount[flag[i]]+")";
                     } else if (flag[i] == 3) {
- //                       flag[i] = 4;
-                        roundGains[i] = playerName[3];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+     /*                   if(titan && player!=flag[i] && cardCount[flag[i]]!=0)
+                        {
+                            cardCount[flag[i]] = cardCount[flag[i]]-1;
+                            titan = false;
+                        }
+      */                  roundGains[i] = playerName[flag[i]]+" ("+cardCount[flag[i]]+")";
                     }
                 }
-
-     /*           qinF.setText(Integer.toString(flag[0]));
-                qiF.setText(Integer.toString(flag[1]));
-                chuF.setText(Integer.toString(flag[2]));
-                zhaoF.setText(Integer.toString(flag[3]));
-                hanF.setText(Integer.toString(flag[4]));
-                weiF.setText(Integer.toString(flag[5]));
-                yanF.setText(Integer.toString(flag[6]));*/
 
                 qinF.setText(roundGains[0]);
                 qiF.setText(roundGains[1]);
@@ -873,10 +921,32 @@ public class Game extends Application {
         for(int y=0;y<c.length;y++)
             if(isMoveLegal(placement1,c[y]))
                 isEnd = false;
+
+        if(!isEnd && !scene2player.isPlaying())
+            scene2player.play();
+
         if(isEnd == true) {
             winner();
             botPlay = false;
         }
 
+    }
+
+    private int numOfCards(int id) {
+        String supporters = getSupporters(setup,moveSequence,num_players,id);
+   //     System.out.println("These are the supporters:"+ supporters);
+        String numofcards[] = new String[supporters.length()];
+        numofcards = substr(supporters,2);
+  /*      for(int x=0;x<numofcards.length;x++)
+            System.out.println("These are each of the cards in numofcards for player"+(id+1)+": "+numofcards[x]);
+        for(int x=0;x<numofcards.length;x++){
+            if(numofcards[x].equals("g0") && titanCount == 0) {
+                titan = true;
+                System.out.println("reached here");
+                titanCount = 1;
+            }
+        }*/
+
+        return numofcards.length;
     }
 }
