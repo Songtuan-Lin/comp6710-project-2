@@ -125,6 +125,7 @@ public class Viewer extends Application {
     /**
      * @param placement
      * @return array of strings containing each character and it's position
+     * Author: Rufus Raja (u6275198)
      */
     public String[] substr(String placement)
         {
