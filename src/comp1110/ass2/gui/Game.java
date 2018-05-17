@@ -332,8 +332,8 @@ public class Game extends Application {
         {
             button.setDisable(true);
             textField.setDisable(true);
-       //     getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
-            getMove = BotMove()+"";
+            getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
+           // getMove = BotMove()+"";
             delay(2000, new Runnable(){ public void run(){ nextStep();} });
       //      nextStep();
         }
@@ -1098,7 +1098,7 @@ public class Game extends Application {
         String nextPlacement;
         if(moveList.size() == 0)
             return getUtility(oldMoveSequence);
-        else if(deep > 8 && limit == true)
+        else if(deep > 7 && limit == true)
             return getUtility(oldMoveSequence);
         for(char move : moveList)
         {
@@ -1130,7 +1130,7 @@ public class Game extends Application {
         String nextPlacement;
         if(moveList.size() == 0)
             return getUtility(oldMovesequence);
-        else if(deep > 8 && limit == true)
+        else if(deep > 7 && limit == true)
             return getUtility(oldMovesequence);
         for(char move : moveList)
         {
