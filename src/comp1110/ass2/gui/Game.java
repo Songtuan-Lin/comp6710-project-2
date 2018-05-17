@@ -6,8 +6,6 @@ import java.util.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,26 +18,20 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.AudioTrack;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Random;
 import comp1110.ass2.WarringStatesGame;
 
-import javafx.scene.media.AudioTrack;
 //import jdk.nashorn.internal.runtime.Property;
 
 import static comp1110.ass2.WarringStatesGame.*;
-import static javafx.application.Platform.accessibilityActiveProperty;
 import static javafx.application.Platform.exit;
 
 public class Game extends Application {
@@ -64,6 +56,7 @@ public class Game extends Application {
     private final Group controls = new Group();
     static int flag[] = new int[7];
     static int botFlag[][] = new int[7][7];
+    public int cardCount[] = new int[7];
     static String roundGains[] = new String[7];
     TextField textField,player1,player2,player3,player4;
     Label qinF  = new Label(" ");
@@ -74,12 +67,15 @@ public class Game extends Application {
     Label weiF   = new Label(" "); 
     Label yanF   = new Label(" ");
     int mCount = 0;
+    int titanCount = 0;
     static Label winnerID = new Label(" ");;
     String moveSequence = "";
     String botMoveSequence = "";
     static int winner=0;
+    public int player =-1;
     boolean check = true;
     boolean botPlay = true;
+    boolean titan = false;
     Thread t;
     GridPane pane = new GridPane();
     static Text test=new Text(45,350,"");
@@ -95,6 +91,23 @@ public class Game extends Application {
     AudioClip loki5 = new AudioClip(this.getClass().getResource("/resource/Loki5.wav").toString());
     AudioClip lokiEnding = new AudioClip(this.getClass().getResource("/resource/LokiEnding.wav").toString());
     AudioClip click2 = new AudioClip(this.getClass().getResource("/resource/clicksound.mp3").toString());
+ //   Label scoreLabel[] = new Label[4];
+    Label sp1 = new Label();
+    Label sp2 = new Label();
+    Label sp3 = new Label();
+    Label sp4 = new Label();
+    HBox scoreLabels = new HBox();
+    Text scores1 = new Text();
+    Text scores2 = new Text();
+    Text scores3 = new Text();
+    Text scores4 = new Text();
+
+    Text cards1 = new Text();
+    Text cards2 = new Text();
+    Text cards3 = new Text();
+    Text cards4 = new Text();
+
+    HBox scores = new HBox();
 /*    String scene1Music = "/resource/scene1.mp3";     // For example
     String scene2Music = "/resource/scene2.mp3";
     Media sound1 = new Media(new File(scene1Music).toURI().toString());
@@ -162,7 +175,7 @@ public class Game extends Application {
                         {p.z9}
                 };
 
-        sub = substr(placement);
+        sub = substr(placement,3);
 
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
@@ -221,12 +234,12 @@ public class Game extends Application {
 
     }
 
-    private String[] substr(String placement)
+    private String[] substr(String placement,int pos)
     {
         int count =0;
-        String sub[] = new String[placement.length()/3];
-        for (int x = 0; x < placement.length(); x += 3) {
-            sub[count] = placement.substring(x, x + 3);
+        String sub[] = new String[placement.length()/pos];
+        for (int x = 0; x < placement.length(); x += pos) {
+            sub[count] = placement.substring(x, x + pos);
             count++;
         }
         return sub;
@@ -243,8 +256,8 @@ public class Game extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                if(!textField.getText().equals("") || !textField.getText().equals(" "))
                 singleMove();
-              //  click2.stop();
             }
         });
 
@@ -253,7 +266,7 @@ public class Game extends Application {
             @Override
             public void handle(KeyEvent ke)
             {
-                if (ke.getCode().equals(KeyCode.ENTER))
+                if (ke.getCode().equals(KeyCode.ENTER) && (!textField.getText().equals("") || !textField.getText().equals(" ")))
                 {
                     singleMove();
                 }
@@ -319,12 +332,11 @@ public class Game extends Application {
         {
             button.setDisable(true);
             textField.setDisable(true);
-            getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
-            delay(1000, new Runnable(){ public void run(){ nextStep();} });
-            //nextStep();
+       //     getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
+            getMove = BotMove()+"";
+            delay(2000, new Runnable(){ public void run(){ nextStep();} });
+      //      nextStep();
         }
-        //              gridPane.getChildren().clear();
-        //              makePlacement(textField.getText());
         textField.clear();
         if(playerName[1].equals("Omega(AI)") && check && botPlay)
         {
@@ -388,7 +400,80 @@ public class Game extends Application {
         hanF.setTextFill(Color.WHITE.brighter());
         weiF.setTextFill(Color.WHITE.brighter());
         yanF.setTextFill(Color.WHITE.brighter());
+        scoreLabels.setLayoutX(760);
+        scoreLabels.setLayoutY(470);
+ //       scores.setLayoutX(740);
+ //       scores.setLayoutY(510);
+        VBox p1Score = new VBox();
+        VBox p2Score = new VBox();
+        VBox p3Score = new VBox();
+        VBox p4Score = new VBox();
+        p1Score.setLayoutX(783);
+        p1Score.setLayoutY(472);
+        p2Score.setLayoutX(843);
+        p2Score.setLayoutY(472);
+        p3Score.setLayoutX(903);
+        p3Score.setLayoutY(472);
+        p4Score.setLayoutX(963);
+        p4Score.setLayoutY(472);
 
+        Label scoreHead = new Label("SCORES");
+        scoreHead.setTextFill(Color.WHITE);
+        scoreHead.setFont(Font.font("Verdana", FontWeight.BOLD, 12));;
+        scoreHead.setLayoutX(854);
+        scoreHead.setLayoutY(444);
+        Label flagCount = new Label("Teams: ");
+        Label cardCount = new Label("Cards: ");
+        flagCount.setLayoutX(723);
+        flagCount.setLayoutY(494);
+        cardCount.setLayoutX(723);
+        cardCount.setLayoutY(517);
+        cardCount.setFont(Font.font("Arial Black", FontWeight.BOLD, 10));
+        flagCount.setFont(Font.font("Arial Black", FontWeight.BOLD, 10));
+        cardCount.setTextFill(Color.WHITE);
+        flagCount.setTextFill(Color.WHITE);
+/*        scores1.setLayoutX(765);
+        scores1.setLayoutY(505);
+        scores2.setLayoutX(827);
+        scores2.setLayoutY(505);
+        scores3.setLayoutX(890);
+        scores3.setLayoutY(505);
+        scores4.setLayoutX(948);
+        scores4.setLayoutY(505);
+  */    sp1.setTextFill(Color.WHITE.brighter());
+        sp2.setTextFill(Color.WHITE.brighter());
+        sp3.setTextFill(Color.WHITE.brighter());
+        sp4.setTextFill(Color.WHITE.brighter());
+        scores1.setFill(Color.WHITE.brighter());
+        scores2.setFill(Color.WHITE.brighter());
+        scores3.setFill(Color.WHITE.brighter());
+        scores4.setFill(Color.WHITE.brighter());
+        scores1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        scores2.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        scores3.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        scores4.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        cards1.setFill(Color.WHITE.brighter());
+        cards2.setFill(Color.WHITE.brighter());
+        cards3.setFill(Color.WHITE.brighter());
+        cards4.setFill(Color.WHITE.brighter());
+        cards1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        cards2.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        cards3.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+        cards4.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
+  //      scoreLabels.getChildren().addAll(sp1,sp2,sp3,sp4);
+        p1Score.getChildren().addAll(sp1,scores1,cards1);
+        p2Score.getChildren().addAll(sp2,scores2,cards2);
+        p3Score.getChildren().addAll(sp3,scores3,cards3);
+        p4Score.getChildren().addAll(sp4,scores4,cards4);
+        p1Score.setSpacing(3);
+        p2Score.setSpacing(3);
+        p3Score.setSpacing(3);
+        p4Score.setSpacing(3);
+
+
+        scoreLabels.setSpacing(20);
+   //     scores.getChildren().addAll(scores1,scores2,scores3,scores4);
+        scores.setSpacing(60);
         gridPane.setLayoutX(100);
         gridPane.setLayoutY(10);
      //   t = new Thread(sleeper);
@@ -449,15 +534,18 @@ public class Game extends Application {
         playerIDs.setLayoutY(10);
 
         Button startGame = new Button("Start Game");
+        Button help = new Button("Instructions");
         Button mutemusic = new Button("Music On/Off");
         Button reset = new Button("Reset");
         HBox sounds = new HBox();
         sounds.getChildren().addAll(mutemusic);
         sounds.setSpacing(40);
-        sounds.setLayoutX(850);
+        sounds.setLayoutX(100);
         sounds.setLayoutY(650);
-        startGame.setLayoutX(500);
+        startGame.setLayoutX(450);
         startGame.setLayoutY(550);
+        help.setLayoutX(550);
+        help.setLayoutY(550);
         player.setItems(FXCollections.observableArrayList(
                 "1 Player","2 Players","3 Players","4 Players"));
         player.setValue("1 Player");
@@ -502,10 +590,15 @@ public class Game extends Application {
         root.getChildren().add(winnerID);
         root.getChildren().add(test);
         root.getChildren().add(sounds);
+   //     root.getChildren().add(scoreLabels);
+        root.getChildren().addAll(p1Score,p2Score,p3Score,p4Score);
+        root.getChildren().add(scoreHead);
+        root.getChildren().addAll(flagCount,cardCount);
         scene1player.setVolume(0.2);
         scene1player.play();
         introroot.getChildren().add(player);
         introroot.getChildren().add(startGame);
+        introroot.getChildren().add(help);
    //     selection.getChildren().addAll(startGame);
    //     selection.setSpacing(50);
 
@@ -544,6 +637,10 @@ public class Game extends Application {
         playerName[1] = "Player 2";
         playerName[2] = "Player 3";
         playerName[3] = "Player 4";
+        sp1.setText("Player 1");
+        sp2.setText("Player 2");
+        sp3.setText("Player 3");
+        sp4.setText("Player 4");
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -557,27 +654,47 @@ public class Game extends Application {
                 scene1player.stop();
                 lokiIntro.play();
                 scene2player.setVolume(0.1);
+                scene2player.setCycleCount(AudioClip.INDEFINITE);
                 scene2player.play();
                 num_players = Integer.parseInt(player.getValue().toString().substring(0,1));
                 System.out.println("number of players"+num_players);
   //              gridPane.setGridLinesVisible(true);
-                if(!player1.getText().equals(""))
-                playerName[0] = player1.getText();
+                if(!player1.getText().equals("")) {
+                    playerName[0] = player1.getText();
+                    sp1.setText(playerName[0]);
+                }
                 if(num_players == 1)
                 {
                     playerName[1] = "Omega(AI)";
                     num_players = 2;
+                    sp2.setText("Omega(AI)");
+                    sp3.setText(" ");
+                    sp4.setText(" ");
+                    scoreHead.setLayoutX(830);
+                    scoreHead.setLayoutY(450);
                 }
                 if(num_players == 2)
                 {
-                    if(!player2.getText().equals(""))
-                    playerName[1] = player2.getText();
+                    if(!player2.getText().equals("")) {
+                        playerName[1] = player2.getText();
+                        sp2.setText(playerName[1]);
+                        sp3.setText(" ");
+                        sp4.setText(" ");
+                        scoreHead.setLayoutX(830);
+                        scoreHead.setLayoutY(450);
+                    }
                 }
                 if(num_players == 3)
                 {
                     if(!player2.getText().equals("") || !player3.getText().equals("")) {
                         playerName[1] = player2.getText();
                         playerName[2] = player3.getText();
+                        sp2.setText(playerName[1]);
+                        sp3.setText(playerName[2]);
+                        sp4.setText(" ");
+                        scoreHead.setLayoutX(830);
+                        scoreHead.setLayoutY(450);
+
                     }
                 }
                 if(num_players == 4)
@@ -586,6 +703,11 @@ public class Game extends Application {
                         playerName[1] = player2.getText();
                         playerName[2] = player3.getText();
                         playerName[3] = player4.getText();
+                        sp2.setText(playerName[1]);
+                        sp3.setText(playerName[2]);
+                        sp4.setText(playerName[3]);
+                        scoreHead.setLayoutX(830);
+                        scoreHead.setLayoutY(450);
                     }
                 }
                 for(String s:roundGains)
@@ -637,11 +759,31 @@ public class Game extends Application {
                 primaryStage.setScene(scene);
             }
         });
+
+        help.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                final Stage helpScreen = new Stage();
+                helpScreen.getIcons().add(new Image("/resource/comicwars.JPG"));
+                helpScreen.setResizable(false);
+                Image helpS = new Image("/resource/z11_background.jpg");
+                helpScreen.initModality(Modality.APPLICATION_MODAL);
+                helpScreen.initOwner(primaryStage);
+                Pane insts = new Pane();
+                Scene dialogScene = new Scene(insts, 1300, 730);
+                insts.setBackground(new Background(new BackgroundImage(helpS,
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.CENTER,
+                        new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true))));
+                helpScreen.setScene(dialogScene);
+                helpScreen.show();
+            }
+        });
         makeControls();
     //    primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setScene(intro);
-        primaryStage.getIcons().add(new Image("/resource/comicwars.JPG"));
+        primaryStage.getIcons().add(new Image("/resource/comicwars.jpg"));
         primaryStage.show();
 
     }
@@ -659,11 +801,11 @@ public class Game extends Application {
    //     GridPane pane = new GridPane();
         Label setupDisplay = new Label("Board Layout = ");
         setupDisplay.setLayoutX(740);
-        setupDisplay.setLayoutY(530);
+        setupDisplay.setLayoutY(610);
         setupDisplay.setTextFill(Color.WHITE);
         setupDisplay.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
         pane.setLayoutX(860);
-        pane.setLayoutY(480);
+        pane.setLayoutY(560);
         pane.setStyle("-fx-background-color: Black; -fx-border-color: Black");
         root.getChildren().add(pane);
         root.getChildren().add(setupDisplay);
@@ -758,8 +900,11 @@ public class Game extends Application {
                 };
 
         placement1 = PLACEMENTS[selector];
-        String [] sub = substr(placement1);
-
+        String [] sub = substr(placement1,3);
+        scores1.setText(" ");
+        scores2.setText(" ");
+        scores3.setText(" ");
+        scores4.setText(" ");
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
                 rown = 7;
@@ -816,8 +961,6 @@ public class Game extends Application {
 
     public void nextStep() {
         String move = "z9"+getMove;
-        System.out.println("This is the value of getMove"+move);
-  //      System.out.println(move);
         boolean isEnd = true;
         if(!getMove.equals("")) {
             check = isMoveLegal(placement1, getMove.charAt(0));
@@ -829,38 +972,59 @@ public class Game extends Application {
                 System.out.println("Placement before the move " + placement1);
                 boolean val = isPlacementWellFormed(placement1);
                 if (val) {
-                    System.out.println("Made it here");
                     makePlacement(placement1);
                 } else
                     exit();
                 moveSequence = moveSequence + getMove;
+    /*            if(player >= (num_players-1))
+                {
+                    player = 0;
+                }
+                else
+                player = player+1;
+    */
+     //           System.out.println("This was player:"+(player+1)+" move");
+                int score1,score2,score3,score4;
+                score1=score2=score3=score4=0;
                 flag = getFlags(setup, moveSequence, num_players);
                 for (int i = 0; i < flag.length; i++) {
                     if (flag[i] == -1) {
-  //                      flag[i] = 0;
                         roundGains[i] = " ";
                     } else if (flag[i] == 0) {
-  //                      flag[i] = 1;
-                        roundGains[i] = playerName[0];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+                        roundGains[i] = playerName[flag[i]];//+" ("+cardCount[flag[i]]+")";
+                        score1+=1;
                     } else if (flag[i] == 1) {
- //                       flag[i] = 2;
-                        roundGains[i] = playerName[1];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+                        roundGains[i] = playerName[flag[i]];//+" ("+cardCount[flag[i]]+")";
+                        score2+=1;
                     } else if (flag[i] == 2) {
- //                       flag[i] = 3;
-                        roundGains[i] = playerName[2];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+                        roundGains[i] = playerName[flag[i]];//+" ("+cardCount[flag[i]]+")";
+                        score3+=1;
                     } else if (flag[i] == 3) {
- //                       flag[i] = 4;
-                        roundGains[i] = playerName[3];
+                        cardCount[flag[i]] = numOfCards(flag[i]);
+                        roundGains[i] = playerName[flag[i]];//+" ("+cardCount[flag[i]]+")";
+                        score4+=1;
                     }
                 }
 
-     /*           qinF.setText(Integer.toString(flag[0]));
-                qiF.setText(Integer.toString(flag[1]));
-                chuF.setText(Integer.toString(flag[2]));
-                zhaoF.setText(Integer.toString(flag[3]));
-                hanF.setText(Integer.toString(flag[4]));
-                weiF.setText(Integer.toString(flag[5]));
-                yanF.setText(Integer.toString(flag[6]));*/
+                if(score1 != 0){
+                    scores1.setText(" "+Integer.toString(score1));
+                    cards1.setText(" "+Integer.toString(cardCount[0]));
+                }
+                if(score2 != 0){
+                    scores2.setText(" "+Integer.toString(score2));
+                    cards2.setText(" "+Integer.toString(cardCount[1]));
+                }
+                if(score3 != 0){
+                    scores3.setText(" "+Integer.toString(score3));
+                    cards3.setText(" "+Integer.toString(cardCount[2]));
+                }
+                if(score4 != 0){
+                    scores4.setText(" "+Integer.toString(score4));
+                    cards4.setText(" "+Integer.toString(cardCount[3]));
+                }
 
                 qinF.setText(roundGains[0]);
                 qiF.setText(roundGains[1]);
@@ -870,6 +1034,7 @@ public class Game extends Application {
                 weiF.setText(roundGains[5]);
                 yanF.setText(roundGains[6]);
 
+
             }
         }
         else
@@ -877,11 +1042,22 @@ public class Game extends Application {
         for(int y=0;y<c.length;y++)
             if(isMoveLegal(placement1,c[y]))
                 isEnd = false;
+
+        if(!isEnd && !scene2player.isPlaying())
+            scene2player.play();
+
         if(isEnd == true) {
             winner();
             botPlay = false;
         }
 
+    }
+
+    private int numOfCards(int id) {
+        String supporters = getSupporters(setup,moveSequence,num_players,id);
+        String numofcards[] = new String[supporters.length()];
+        numofcards = substr(supporters,2);
+        return numofcards.length;
     }
 
     char alpha_beta_search(String placement, String[][] boardState)
