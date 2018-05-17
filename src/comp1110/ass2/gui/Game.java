@@ -899,8 +899,8 @@ public class Game extends Application {
                 boardMatrix = oneMove(move.charAt(2), placement1, boardMatrix);
                 placement1 = matrixToString(boardMatrix);
                 gridPane.getChildren().clear();
-                boolean val = isPlacementWellFormed(placement1);
-                if (val) {
+                boolean validPlacement = isPlacementWellFormed(placement1);
+                if (validPlacement) {
                     makePlacement(placement1);
                 } else
                     exit();
