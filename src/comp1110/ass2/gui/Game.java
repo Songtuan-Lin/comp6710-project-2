@@ -38,13 +38,11 @@ import static javafx.application.Platform.exit;
 public class Game extends Application {
     static int num_players = 0;
 
-    private static final int BOARD_WIDTH = 933;
-    private static final int BOARD_HEIGHT = 700;
     Card p = new Card();
     String getMove;
     String getBotMove;
     GridPane gridPane = new GridPane();
-    private static final int VIEWER_WIDTH = 1033;
+    private static final int VIEWER_WIDTH = 933;
     private static final int VIEWER_HEIGHT = 700;
     String boardMatrix[][];
     static String playerName[];
@@ -279,7 +277,7 @@ public class Game extends Application {
         HBox hb = new HBox();
         hb.getChildren().addAll(playerMoveLabel, textField, button);
         hb.setSpacing(10);
-        hb.setLayoutX(250);
+        hb.setLayoutX(175);
         hb.setLayoutY(VIEWER_HEIGHT-50);
         controls.getChildren().add(hb);
     }
@@ -381,14 +379,14 @@ public class Game extends Application {
         VBox p2Score = new VBox();
         VBox p3Score = new VBox();
         VBox p4Score = new VBox();
-        p1Score.setLayoutX(783);
-        p1Score.setLayoutY(472);
-        p2Score.setLayoutX(843);
-        p2Score.setLayoutY(472);
-        p3Score.setLayoutX(903);
-        p3Score.setLayoutY(472);
-        p4Score.setLayoutX(963);
-        p4Score.setLayoutY(472);
+        p1Score.setLayoutX(693);
+        p1Score.setLayoutY(462);
+        p2Score.setLayoutX(753);
+        p2Score.setLayoutY(462);
+        p3Score.setLayoutX(813);
+        p3Score.setLayoutY(462);
+        p4Score.setLayoutX(873);
+        p4Score.setLayoutY(462);
         Label scoreHead = new Label("SCORES");
         scoreHead.setTextFill(Color.WHITE);
         scoreHead.setFont(Font.font("Verdana", FontWeight.BOLD, 12));;
@@ -396,10 +394,10 @@ public class Game extends Application {
         scoreHead.setLayoutY(444);
         Label flagCount = new Label("Teams: ");
         Label cardCount = new Label("Cards: ");
-        flagCount.setLayoutX(723);
-        flagCount.setLayoutY(494);
-        cardCount.setLayoutX(723);
-        cardCount.setLayoutY(517);
+        flagCount.setLayoutX(638);
+        flagCount.setLayoutY(484);
+        cardCount.setLayoutX(638);
+        cardCount.setLayoutY(507);
         cardCount.setFont(Font.font("Arial Black", FontWeight.BOLD, 10));
         flagCount.setFont(Font.font("Arial Black", FontWeight.BOLD, 10));
         cardCount.setTextFill(Color.WHITE);
@@ -434,7 +432,7 @@ public class Game extends Application {
         p4Score.setSpacing(3);
         scoreLabels.setSpacing(20);
         scores.setSpacing(60);
-        gridPane.setLayoutX(100);
+        gridPane.setLayoutX(15);
         gridPane.setLayoutY(10);
         root.getChildren().add(gridPane);
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
@@ -461,12 +459,8 @@ public class Game extends Application {
         kingdoms.setSpacing(30);
         kingdoms.setLayoutX(750);
         kingdoms.setLayoutY(70);
-        flags = new VBox();
-        flags.setSpacing(50);
-        flags.setLayoutX(835);
-        flags.setLayoutY(40);
         playerIDs.setSpacing(20);
-        playerIDs.setLayoutX(830);
+        playerIDs.setLayoutX(740);
         playerIDs.setLayoutY(10);
         Button startGame = new Button("Start Game");
         Button help = new Button("Instructions");
@@ -474,11 +468,11 @@ public class Game extends Application {
         HBox sounds = new HBox();
         sounds.getChildren().addAll(mutemusic);
         sounds.setSpacing(40);
-        sounds.setLayoutX(100);
+        sounds.setLayoutX(15);
         sounds.setLayoutY(650);
-        startGame.setLayoutX(450);
+        startGame.setLayoutX(400);
         startGame.setLayoutY(550);
-        help.setLayoutX(550);
+        help.setLayoutX(500);
         help.setLayoutY(550);
         player.setItems(FXCollections.observableArrayList(
                 "1 Player","2 Players","3 Players","4 Players"));
@@ -486,7 +480,7 @@ public class Game extends Application {
         selection.setLayoutX(VIEWER_HEIGHT/2);
         selection.setLayoutY(VIEWER_WIDTH/2);
         player.setLayoutY(250);
-        player.setLayoutX(500);
+        player.setLayoutX(445);
         VBox playerLabels = new VBox();
         Label player1name = new Label("Player 1");
         Label player2name = new Label("Player 2");
@@ -504,11 +498,11 @@ public class Game extends Application {
         player2.setDisable(true);
         player3.setDisable(true);
         player4.setDisable(true);
-        playerLabels.setLayoutX(400);
+        playerLabels.setLayoutX(355);
         playerLabels.setLayoutY(300);
         playerLabels.setSpacing(30);
         playerLabels.getChildren().addAll(player1name,player2name,player3name,player4name);
-        playernames.setLayoutX(465);
+        playernames.setLayoutX(415);
         playernames.setLayoutY(300);
         playernames.getChildren().addAll(player1,player2,player3,player4);
         /*Limit the name field to 9 characters*/
@@ -534,7 +528,7 @@ public class Game extends Application {
         introroot.getChildren().add(playerLabels);
         root.getChildren().add(controls);
         root.getChildren().add(playerIDs);
-        root.getChildren().add(flags);
+  //      root.getChildren().add(flags);
         root.getChildren().add(winnerID);
         root.getChildren().add(declareWinner);
         root.getChildren().add(sounds);
@@ -609,15 +603,15 @@ public class Game extends Application {
                     sp2.setText("Omega(AI)");
                     sp3.setText(" ");
                     sp4.setText(" ");
-                    scoreHead.setLayoutX(805);
-                    scoreHead.setLayoutY(450);
+                    scoreHead.setLayoutX(714);
+                    scoreHead.setLayoutY(435);
                 }
                 if(num_players == 2)
                 {
                     sp3.setText(" ");
                     sp4.setText(" ");
-                    scoreHead.setLayoutX(805);
-                    scoreHead.setLayoutY(450);
+                    scoreHead.setLayoutX(714);
+                    scoreHead.setLayoutY(435);
                     if(!player2.getText().equals("")) {
                         playerName[1] = player2.getText();
                         sp2.setText(playerName[1]);
@@ -626,8 +620,8 @@ public class Game extends Application {
                 if(num_players == 3)
                 {
                     sp4.setText(" ");
-                    scoreHead.setLayoutX(830);
-                    scoreHead.setLayoutY(450);
+                    scoreHead.setLayoutX(742);
+                    scoreHead.setLayoutY(435);
                     if(!player2.getText().equals("") || !player3.getText().equals("")) {
                         playerName[1] = player2.getText();
                         playerName[2] = player3.getText();
@@ -637,8 +631,8 @@ public class Game extends Application {
                 }
                 if(num_players == 4)
                 {
-                    scoreHead.setLayoutX(860);
-                    scoreHead.setLayoutY(450);
+                    scoreHead.setLayoutX(772);
+                    scoreHead.setLayoutY(435);
                     if(!player2.getText().equals("") || !player3.getText().equals("") || !player4.getText().equals("")) {
                         playerName[1] = player2.getText();
                         playerName[2] = player3.getText();
@@ -668,13 +662,21 @@ public class Game extends Application {
                 playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
-                flags.getChildren().addAll(qinF,qiF,chuF,zhaoF,hanF);
-                weiF.setLayoutX(833);
-                weiF.setLayoutY(365);
-                yanF.setLayoutX(833);
-                yanF.setLayoutY(410);
-                root.getChildren().add(weiF);
-                root.getChildren().add(yanF);
+                qinF.setLayoutX(743);
+                qinF.setLayoutY(60);
+                qiF.setLayoutX(743);
+                qiF.setLayoutY(115);
+                chuF.setLayoutX(743);
+                chuF.setLayoutY(165);
+                zhaoF.setLayoutX(743);
+                zhaoF.setLayoutY(239);
+                hanF.setLayoutX(743);
+                hanF.setLayoutY(295);
+                weiF.setLayoutX(743);
+                weiF.setLayoutY(342);
+                yanF.setLayoutX(743);
+                yanF.setLayoutY(383);
+                root.getChildren().addAll(qinF,qiF,chuF,zhaoF,hanF,weiF,yanF);
                 setup = placement1;
                 boardMatrix = createMatrix(placement1);
                 primaryStage.setScene(scene);
@@ -724,11 +726,11 @@ public class Game extends Application {
                 {"A","B","C","D","E","F"}
         };
         Label setupDisplay = new Label("Board Layout = ");
-        setupDisplay.setLayoutX(740);
+        setupDisplay.setLayoutX(638);
         setupDisplay.setLayoutY(610);
         setupDisplay.setTextFill(Color.WHITE);
         setupDisplay.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-        pane.setLayoutX(860);
+        pane.setLayoutX(750);
         pane.setLayoutY(560);
         pane.setStyle("-fx-background-color: Black; -fx-border-color: Black");
         root.getChildren().add(pane);
