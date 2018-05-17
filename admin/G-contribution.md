@@ -4,5 +4,4 @@ We declare that the work toward our submission of Stage G was distributed among 
 * u6528982 30
 * u6162630 35
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0123456)
-
+Signed: Jiajia Xu (u6528982), Songtuan Lin (u6162630), and John Rufus Raja(u6275198)
