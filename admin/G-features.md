@@ -13,4 +13,10 @@ of our project implements the following features:
 
 additional features...
 
+ - A unique GUI based on the theme of Marvel and DC comics.
+ - Audio tracks in-line with the them that can be toggled, with prompts from Loki, every few moves into the game.
+ - An instruction page, guiding any new players on how to play the game. 
+ - Multi-player option up to 4 players, playing simultaneously. 
+
+
 

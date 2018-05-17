@@ -1,7 +1,7 @@
 package comp1110.ass2.gui;
 
-//import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-//import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import comp1110.ass2.Card;
 import java.util.*;
 import javafx.application.Application;
@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import java.util.Random;
 import comp1110.ass2.WarringStatesGame;
 
-//import jdk.nashorn.internal.runtime.Property;
+
 
 import static comp1110.ass2.WarringStatesGame.*;
 import static javafx.application.Platform.exit;
@@ -61,11 +61,11 @@ public class Game extends Application {
     static String roundGains[] = new String[7];
     TextField textField,player1,player2,player3,player4;
     Label qinF  = new Label(" ");
-    Label qiF    = new Label(" "); 
-    Label chuF   = new Label(" "); 
-    Label zhaoF  = new Label(" "); 
-    Label hanF   = new Label(" "); 
-    Label weiF   = new Label(" "); 
+    Label qiF    = new Label(" ");
+    Label chuF   = new Label(" ");
+    Label zhaoF  = new Label(" ");
+    Label hanF   = new Label(" ");
+    Label weiF   = new Label(" ");
     Label yanF   = new Label(" ");
     int mCount = 0;
     int titanCount = 0;
@@ -79,7 +79,9 @@ public class Game extends Application {
     boolean titan = false;
     Thread t;
     GridPane pane = new GridPane();
-    static Text test=new Text(45,350,"");
+    static Text declareWinner = new Text(45,350,"");
+
+    /*Declaring all the audio clips to be used*/
     AudioClip click1 = new AudioClip("http://www.wavlist.com/soundfx/020/clock-tick1.wav");
     AudioClip scene1player = new AudioClip(this.getClass().getResource("/resource/Immigrant.mp3").toString());
     AudioClip scene2player = new AudioClip(this.getClass().getResource("/resource/z_avengers.mp3").toString());
@@ -92,7 +94,7 @@ public class Game extends Application {
     AudioClip loki5 = new AudioClip(this.getClass().getResource("/resource/Loki5.wav").toString());
     AudioClip lokiEnding = new AudioClip(this.getClass().getResource("/resource/LokiEnding.wav").toString());
     AudioClip click2 = new AudioClip(this.getClass().getResource("/resource/clicksound.mp3").toString());
- //   Label scoreLabel[] = new Label[4];
+
     Label sp1 = new Label();
     Label sp2 = new Label();
     Label sp3 = new Label();
@@ -102,22 +104,13 @@ public class Game extends Application {
     Text scores2 = new Text();
     Text scores3 = new Text();
     Text scores4 = new Text();
-
     Text cards1 = new Text();
     Text cards2 = new Text();
     Text cards3 = new Text();
     Text cards4 = new Text();
-
     HBox scores = new HBox();
-/*    String scene1Music = "/resource/scene1.mp3";     // For example
-    String scene2Music = "/resource/scene2.mp3";
-    Media sound1 = new Media(new File(scene1Music).toURI().toString());
-    Media sound2 = new Media(new File(scene2Music).toURI().toString());
-    MediaPlayer mediaPlayer1 = new MediaPlayer(sound1);
-    MediaPlayer mediaPlayer2 = new MediaPlayer(sound2);
 
-*/
-
+    /*Randomize the starting placement string*/
     static final String[] PLACEMENTS = {
             "g0Aa0Bf1Ca1Dc5Ee1Fa4Ge3He2Ia2Jc2Kd0Lf0Mb4Nd4Oa6Pc3Qe0Ra5Sc1Td1Uc4Vb5Wb0Xa7Yf2Zb10a31z92b33b64d35g16b27d28c09",
             "g1Aa0Bc0Ce0De3Ed4Fb6Ga4Hg0Ib5Ja7Kb1Lz9Me1Nd0Of0Pf1Qb2Rc1Sd3Ta5Ub4Va2Wc5Xd1Ya3Zc20d21c32f23a64c45b36b07a18e29",
@@ -140,44 +133,41 @@ public class Game extends Application {
             "e3Ad4Ba5Cd1Dc1Eb3Fc5Gd2Hg0Ie0Ja2Kb5Lf1Md3Na6Oz9Pb1Qc3Rf2Sc4Tb0Uc0Ve1Wd0Xg1Ye2Zb60a71a32a03b24a45b46f07c28a19",
             "g0Ac1Bb4Ca5Da2Ea6Ff0Gb1Ha3Id3Ja0Kz9Lc5Mb0Nf1Od2Pe1Qc2Re3Sb6Td0Ub5Va1Wb2Xc3Yb3Zc00e21e02a73d14f25a46g17c48d49"
     };
+
+    /*Array of image objects*/
+    Image[][] grid2 =
+            {
+                    {p.a0, p.a1, p.a2, p.a3, p.a4, p.a5, p.a6, p.a7},
+                    {p.b0, p.b1, p.b2, p.b3, p.b4, p.b5, p.b6},
+                    {p.c0, p.c1, p.c2, p.c3, p.c4, p.c5},
+                    {p.d0, p.d1, p.d2, p.d3, p.d4},
+                    {p.e0, p.e1, p.e2, p.e3},
+                    {p.f0, p.f1, p.f2},
+                    {p.g0, p.g1},
+                    {p.z9}
+            };
+
+    /*Declare all the positions on the baord in an array*/
     static final char c[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9'};
 
 
-    // FIXME Task 9: Implement a basic playable Warring States game in JavaFX
-
-    // FIXME Task 11: Allow players of your Warring States game to play against your simple agent
-
-
-    // FIXME Task 12: Integrate a more advanced opponent into your game
-
-
+    /**
+     * Method to modify the Board after every move
+     * @param placement
+     * Author: Rufus Raja (u6275198)
+     */
     void makePlacement(String placement) {
 
         button.setDisable(false);
         textField.setDisable(false);
         textField.requestFocus();
-
-
         String sub[] = new String[placement.length() / 3];
         int rown = 0, coln = 0,col=5;
         Random r = new Random();
         int selector = r.nextInt(20);
         Image[][] grid = new Image[6][6];
-
-        Image[][] grid2 =
-                {
-                        {p.a0, p.a1, p.a2, p.a3, p.a4, p.a5, p.a6, p.a7},
-                        {p.b0, p.b1, p.b2, p.b3, p.b4, p.b5, p.b6},
-                        {p.c0, p.c1, p.c2, p.c3, p.c4, p.c5},
-                        {p.d0, p.d1, p.d2, p.d3, p.d4},
-                        {p.e0, p.e1, p.e2, p.e3},
-                        {p.f0, p.f1, p.f2},
-                        {p.g0, p.g1},
-                        {p.z9}
-                };
-
         sub = substr(placement,3);
-
+        /*Get the grid for the image changes in the placement string*/
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
                 rown = 7;
@@ -217,6 +207,7 @@ public class Game extends Application {
 
 
         }
+        /*Defining the grid properties*/
         gridPane.setHgap(2);
         gridPane.setVgap(2);
         gridPane.autosize();
@@ -232,9 +223,15 @@ public class Game extends Application {
             }
         }
         grid = null;
-
     }
 
+    /**
+     * Substring function that can break the placement string to required number of characters, and returns a String array
+     * @param placement
+     * @param pos
+     * @return
+     * Author: Rufus Raja (u6275198)
+     */
     private String[] substr(String placement,int pos)
     {
         int count =0;
@@ -247,21 +244,27 @@ public class Game extends Application {
     }
 
     int numOfTimes = 0;
+
+    /**
+     * Create the elements for the game movements
+     * Author: Rufus Raja (u6275198)
+     */
     private void makeControls() {
-        Label label1 = new Label("Player Move:");
-        label1.setTextFill(Color.WHITE);
+        Label playerMoveLabel = new Label("Player Move:");
+        playerMoveLabel.setTextFill(Color.WHITE);
         textField = new TextField();
         textField.setPrefWidth(150);
-   //     textField.se
+
         Button newGame = new Button("New Game");
+        /*Check if the button was pressed*/
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 if(!textField.getText().equals("") || !textField.getText().equals(" "))
-                singleMove();
+                    singleMove();
             }
         });
-
+        /*Check if the Enter key was pressed*/
         textField.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override
@@ -273,25 +276,12 @@ public class Game extends Application {
                 }
             }
         });
-
-        newGame.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
         HBox hb = new HBox();
-        HBox hb1 = new HBox();
-        hb.getChildren().addAll(label1, textField, button);
-    //    hb1.getChildren().add(newGame);
-        hb1.setSpacing(10);
-        hb1.setLayoutX(800);
-        hb1.setLayoutY(50);
+        hb.getChildren().addAll(playerMoveLabel, textField, button);
         hb.setSpacing(10);
         hb.setLayoutX(250);
         hb.setLayoutY(VIEWER_HEIGHT-50);
         controls.getChildren().add(hb);
-        controls.getChildren().add(hb1);
     }
 
     private void singleMove() {
@@ -299,6 +289,7 @@ public class Game extends Application {
         click1.play();
         mCount=mCount+1;
         numOfTimes = 0;
+        /*Modulate the audio based on the moves*/
         if(mCount%5 == 0 && numOfTimes == 0) {
             loki1.play();
             numOfTimes = 1;
@@ -329,57 +320,34 @@ public class Game extends Application {
         {
             nextStep();
         }
+        /*Executes the AI moves*/
         if(playerName[1].equals("Omega(AI)") && check && botPlay)
         {
             button.setDisable(true);
             textField.setDisable(true);
-            getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
-           // getMove = BotMove()+"";
-            delay(2000, new Runnable(){ public void run(){ nextStep();} });
-      //      nextStep();
+            getMove = alpha_beta_search(placement1, boardMatrix) + "";//Call the advanced AI
+            delay(2000, new Runnable(){ public void run(){ nextStep();} });//Delay execution by 2 secs
         }
         textField.clear();
-        if(playerName[1].equals("Omega(AI)") && check && botPlay)
-        {
-          //  advancedAI();
-        }
 
     }
 
-    public void advancedAI()
-    {
-        /*
-        getMove = BotMove()+"";
-        botMoveSequence = botMoveSequence+getMove.charAt(0);
-//        botFlag[y] = getFlags(setup, moveSequence, 2);
-        int x=0;
-        char possible[] = new char[10];
-        for(int y=0;y<c[y];y++) {
-            if (isMoveLegal(placement1, c[y])) {
-                possible[x] = c[y];
-                x++;
-            }
-        }
-        for(int y=0;y<possible.length;y++)
-        {
-            botMoveSequence = botMoveSequence+possible[y];
-
-        }
-
-        button.setDisable(true);
-        textField.setDisable(true);
-        getMove = BotMove()+"";
-        int bestVal = Integer.MIN_VALUE;
-        delay(1000, new Runnable(){ public void run(){ nextStep();} });
-//                 nextStep();
-        */
-    }
-
+    /**
+     * Simple agent moves
+     * @return
+     * Author: Rufus Raja (u6275198)
+     */
     public char BotMove()
     {
         return generateMove(placement1);
     }
 
+    /**
+     * Method to create delays in the processing
+     * @param delayMs
+     * @param toRun
+     * Author: Rufus Raja (u6275198)
+     */
     public static void delay(long delayMs, Runnable toRun){
         Thread t = new Thread(new Runnable(){
             public void run(){
@@ -391,6 +359,12 @@ public class Game extends Application {
         t.start();
     }
 
+    /**
+     * Declaring the main components for the board and the application design
+     * @param primaryStage
+     * @throws Exception
+     * Author: Rufus Raja (u6275198)
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("The Comic Wars");
@@ -403,8 +377,6 @@ public class Game extends Application {
         yanF.setTextFill(Color.WHITE.brighter());
         scoreLabels.setLayoutX(760);
         scoreLabels.setLayoutY(470);
- //       scores.setLayoutX(740);
- //       scores.setLayoutY(510);
         VBox p1Score = new VBox();
         VBox p2Score = new VBox();
         VBox p3Score = new VBox();
@@ -417,7 +389,6 @@ public class Game extends Application {
         p3Score.setLayoutY(472);
         p4Score.setLayoutX(963);
         p4Score.setLayoutY(472);
-
         Label scoreHead = new Label("SCORES");
         scoreHead.setTextFill(Color.WHITE);
         scoreHead.setFont(Font.font("Verdana", FontWeight.BOLD, 12));;
@@ -433,15 +404,7 @@ public class Game extends Application {
         flagCount.setFont(Font.font("Arial Black", FontWeight.BOLD, 10));
         cardCount.setTextFill(Color.WHITE);
         flagCount.setTextFill(Color.WHITE);
-/*        scores1.setLayoutX(765);
-        scores1.setLayoutY(505);
-        scores2.setLayoutX(827);
-        scores2.setLayoutY(505);
-        scores3.setLayoutX(890);
-        scores3.setLayoutY(505);
-        scores4.setLayoutX(948);
-        scores4.setLayoutY(505);
-  */    sp1.setTextFill(Color.WHITE.brighter());
+        sp1.setTextFill(Color.WHITE.brighter());
         sp2.setTextFill(Color.WHITE.brighter());
         sp3.setTextFill(Color.WHITE.brighter());
         sp4.setTextFill(Color.WHITE.brighter());
@@ -461,7 +424,6 @@ public class Game extends Application {
         cards2.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
         cards3.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
         cards4.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
-  //      scoreLabels.getChildren().addAll(sp1,sp2,sp3,sp4);
         p1Score.getChildren().addAll(sp1,scores1,cards1);
         p2Score.getChildren().addAll(sp2,scores2,cards2);
         p3Score.getChildren().addAll(sp3,scores3,cards3);
@@ -470,24 +432,17 @@ public class Game extends Application {
         p2Score.setSpacing(3);
         p3Score.setSpacing(3);
         p4Score.setSpacing(3);
-
-
         scoreLabels.setSpacing(20);
-   //     scores.getChildren().addAll(scores1,scores2,scores3,scores4);
         scores.setSpacing(60);
         gridPane.setLayoutX(100);
         gridPane.setLayoutY(10);
-     //   t = new Thread(sleeper);
         root.getChildren().add(gridPane);
-
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
         Scene intro = new Scene(introroot, VIEWER_WIDTH,VIEWER_HEIGHT);
+        /*Declaring the background images and modifying the background for the scenes*/
         intro.getStylesheets().addAll(this.getClass().getResource("/resource/style.css").toExternalForm());
         Image img = new Image("/resource/z9_background.jpg");
         Image img2 = new Image("/resource/z10_background.jpg");
-      //  root.setBackground();
-      //  root.getChildren().add(bgImg);
-   //     introroot.setBackground(new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         introroot.setBackground(new Background(new BackgroundImage(img,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -517,12 +472,6 @@ public class Game extends Application {
         yan.setTextFill(Color.WHITE);
         p1.setTextFill(Color.WHITE);
         p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
-
-
-
-
-
-    //    kingdoms.getChildren().addAll(qin,qi,chu,zhao,han,wei,yan);
         kingdoms.setSpacing(30);
         kingdoms.setLayoutX(750);
         kingdoms.setLayoutY(70);
@@ -533,11 +482,9 @@ public class Game extends Application {
         playerIDs.setSpacing(20);
         playerIDs.setLayoutX(830);
         playerIDs.setLayoutY(10);
-
         Button startGame = new Button("Start Game");
         Button help = new Button("Instructions");
         Button mutemusic = new Button("Music On/Off");
-        Button reset = new Button("Reset");
         HBox sounds = new HBox();
         sounds.getChildren().addAll(mutemusic);
         sounds.setSpacing(40);
@@ -563,14 +510,11 @@ public class Game extends Application {
         player2name.setTextFill(Color.WHITE);
         player3name.setTextFill(Color.WHITE);
         player4name.setTextFill(Color.WHITE);
-       // player1name.set
         VBox playernames = new VBox();
         player1 = new TextField();
         player2 = new TextField();
         player3 = new TextField();
         player4 = new TextField();
-   //     player1.set
-    //    player1.setDisable(true);
         player2.setDisable(true);
         player3.setDisable(true);
         player4.setDisable(true);
@@ -581,6 +525,7 @@ public class Game extends Application {
         playernames.setLayoutX(465);
         playernames.setLayoutY(300);
         playernames.getChildren().addAll(player1,player2,player3,player4);
+        /*Limit the name field to 9 characters*/
         player1.setOnKeyTyped(event ->{
             int maxCharacters = 8;
             if(player1.getText().length() > maxCharacters) event.consume();
@@ -599,17 +544,14 @@ public class Game extends Application {
         });
         playernames.setSpacing(20);
         player.setMaxSize(200,200);
-    //    introroot.getChildren().add(startGame);
         introroot.getChildren().add(playernames);
         introroot.getChildren().add(playerLabels);
         root.getChildren().add(controls);
-   //     root.getChildren().add(kingdoms);
         root.getChildren().add(playerIDs);
         root.getChildren().add(flags);
         root.getChildren().add(winnerID);
-        root.getChildren().add(test);
+        root.getChildren().add(declareWinner);
         root.getChildren().add(sounds);
-   //     root.getChildren().add(scoreLabels);
         root.getChildren().addAll(p1Score,p2Score,p3Score,p4Score);
         root.getChildren().add(scoreHead);
         root.getChildren().addAll(flagCount,cardCount);
@@ -618,10 +560,8 @@ public class Game extends Application {
         introroot.getChildren().add(player);
         introroot.getChildren().add(startGame);
         introroot.getChildren().add(help);
-   //     selection.getChildren().addAll(startGame);
-   //     selection.setSpacing(50);
 
-
+        /*based on the selection of number of players enable or disable the textfields for names*/
         player.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -660,28 +600,22 @@ public class Game extends Application {
         sp2.setText("Player 2");
         sp3.setText("Player 3");
         sp4.setText("Player 4");
+        /*Initialization and setting up of steps when the game starts*/
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-
                 createGrid();
-
-
-
-
                 click1.play();
-                scene1player.stop();
-                lokiIntro.play();
-                scene2player.setVolume(0.1);
-                scene2player.setCycleCount(AudioClip.INDEFINITE);
-                scene2player.play();
+                scene1player.stop();// Stop scene 1 music
+                lokiIntro.play(); // Play intro Loki message
+                scene2player.setVolume(0.1); //Reduce the volume
+                scene2player.play();//Start scene 2 music
                 num_players = Integer.parseInt(player.getValue().toString().substring(0,1));
-                System.out.println("number of players"+num_players);
-  //              gridPane.setGridLinesVisible(true);
                 if(!player1.getText().equals("")) {
                     playerName[0] = player1.getText();
                     sp1.setText(playerName[0]);
                 }
+                /*Based on the number of players adjust the position of Scores title and the names displayed*/
                 if(num_players == 1)
                 {
                     playerName[1] = "Omega(AI)";
@@ -689,35 +623,36 @@ public class Game extends Application {
                     sp2.setText("Omega(AI)");
                     sp3.setText(" ");
                     sp4.setText(" ");
-                    scoreHead.setLayoutX(830);
+                    scoreHead.setLayoutX(805);
                     scoreHead.setLayoutY(450);
                 }
                 if(num_players == 2)
                 {
+                    sp3.setText(" ");
+                    sp4.setText(" ");
+                    scoreHead.setLayoutX(805);
+                    scoreHead.setLayoutY(450);
                     if(!player2.getText().equals("")) {
                         playerName[1] = player2.getText();
                         sp2.setText(playerName[1]);
-                        sp3.setText(" ");
-                        sp4.setText(" ");
-                        scoreHead.setLayoutX(830);
-                        scoreHead.setLayoutY(450);
                     }
                 }
                 if(num_players == 3)
                 {
+                    sp4.setText(" ");
+                    scoreHead.setLayoutX(830);
+                    scoreHead.setLayoutY(450);
                     if(!player2.getText().equals("") || !player3.getText().equals("")) {
                         playerName[1] = player2.getText();
                         playerName[2] = player3.getText();
                         sp2.setText(playerName[1]);
                         sp3.setText(playerName[2]);
-                        sp4.setText(" ");
-                        scoreHead.setLayoutX(830);
-                        scoreHead.setLayoutY(450);
-
                     }
                 }
                 if(num_players == 4)
                 {
+                    scoreHead.setLayoutX(860);
+                    scoreHead.setLayoutY(450);
                     if(!player2.getText().equals("") || !player3.getText().equals("") || !player4.getText().equals("")) {
                         playerName[1] = player2.getText();
                         playerName[2] = player3.getText();
@@ -725,15 +660,14 @@ public class Game extends Application {
                         sp2.setText(playerName[1]);
                         sp3.setText(playerName[2]);
                         sp4.setText(playerName[3]);
-                        scoreHead.setLayoutX(830);
-                        scoreHead.setLayoutY(450);
                     }
                 }
+                /*Initialize the gains per person to start*/
                 for(String s:roundGains)
                 {
                     s = " ";
                 }
-
+                /*Used to toggle the music controls*/
                 mutemusic.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -745,24 +679,6 @@ public class Game extends Application {
                             scene2player.play();
                     }
                 });
-
-                reset.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                    primaryStage.setScene(intro);
-                    }
-                });
-
-     /*           gridPane.getChildren().clear();
-                if(num_players == 1 || num_players == 2)
-                    playerIDs.getChildren().addAll(p1,p2);
-                else if(num_players == 3 )
-                    playerIDs.getChildren().addAll(p1,p2,p3);
-                else {
-                    System.out.println(num_players);
-                    playerIDs.getChildren().addAll(p1, p2, p3, p4);
-                }*/
-
                 playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
@@ -779,11 +695,12 @@ public class Game extends Application {
             }
         });
 
+        /* Create the help screen with instructions to play the game*/
         help.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 final Stage helpScreen = new Stage();
-                helpScreen.getIcons().add(new Image("/resource/comicwars.JPG"));
+                helpScreen.getIcons().add(new Image("/resource/comicwars.jpg"));
                 helpScreen.setResizable(false);
                 Image helpS = new Image("/resource/z11_background.jpg");
                 helpScreen.initModality(Modality.APPLICATION_MODAL);
@@ -799,7 +716,6 @@ public class Game extends Application {
             }
         });
         makeControls();
-    //    primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setScene(intro);
         primaryStage.getIcons().add(new Image("/resource/comicwars.jpg"));
@@ -807,6 +723,10 @@ public class Game extends Application {
 
     }
 
+    /**
+     * Create the layout grid for move reference
+     * Author: Rufus Raja (u6275198)
+     */
     public void createGrid()
     {
         String array[][] = {
@@ -817,7 +737,6 @@ public class Game extends Application {
                 {"G","H","I","J","K","L"},
                 {"A","B","C","D","E","F"}
         };
-   //     GridPane pane = new GridPane();
         Label setupDisplay = new Label("Board Layout = ");
         setupDisplay.setLayoutX(740);
         setupDisplay.setLayoutY(610);
@@ -839,18 +758,20 @@ public class Game extends Application {
         }
     }
 
-
+    /**
+     * Count the number of flags and cards of each player, decide who is the winner
+     * Author: Rufus Raja (u6275198), Jiajia Xu (6528982)
+     */
     public static void winner() {
-        //count the number of flags and cards of each player, decide who is the winner
         int playerSums [] = new int[num_players];
         for(int x=0; x<playerSums.length;x++)
         {
             playerSums[x] = WinnerSum(x);
         }
         int max = playerSums[0];
-        int maxcard;
         winner = 0;
-        String winnername = " ";
+        String winnerName = " ";
+        /*Compare number of flags to determine the winner*/
         for(int x=0;x<playerSums.length;x++)
         {
             if(playerSums[x] > max)
@@ -861,10 +782,12 @@ public class Game extends Application {
             }
             if(playerSums[x] == max)
             {
+                /*If the flags are same, checks for the number of cards*/
                 if(cardCount[x] > cardCount[winner]) {
                     max = playerSums[x];
                     winner = x;
                 }
+                /*If cards are same checks for who holds the Avengers cards (largest team)*/
                 if(cardCount[x] == cardCount[winner] && flag[0] == x)
                 {
                     winner = x;
@@ -875,36 +798,33 @@ public class Game extends Application {
                 }
             }
         }
-  //      winner = winner;
-        winnername = playerName[winner];
-        System.out.println("Winner ID:"+winner);
+        winnerName = playerName[winner];
         String win = Integer.toString(winner);
-  /*      winnerID.setText("Player:"+win+" is the Winner!");
-        winnerID.resize(500,500);
-        winnerID.setStyle("-fx-font-weight: bold");
-        winnerID.setLayoutX(VIEWER_WIDTH/2-100);
-        winnerID.setLayoutY(VIEWER_HEIGHT/2-100);
-        winnerID.setTextFill(Color.RED); */
         Game end = new Game();
-        test.setText("Player "+winnername+" is the Winner!");
+        declareWinner.setText("Player "+winnerName+" is the Winner!");
         end.scene2player.setVolume(0.08);
         end.lokiEnding.play();
         end.scene2player.stop();
-        test.setLayoutX(0);
-        test.setLayoutY(0);
-        test.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
-        test.setFill(Color.RED);
+        declareWinner.setLayoutX(0);
+        declareWinner.setLayoutY(0);
+        declareWinner.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        declareWinner.setFill(Color.RED);
 
 
 
     }
 
-    public static int WinnerSum(int y)
+    /**
+     * Method to find the sum of flags held by a player ID
+     * @param id
+     * @return
+     */
+    public static int WinnerSum(int id)
     {
         int sum = 0;
         for(int x=0;x<flag.length;x++)
         {
-            if(flag[x] == y)
+            if(flag[x] == id)
             {
                 sum+=1;
             }
@@ -912,34 +832,22 @@ public class Game extends Application {
         return sum;
     }
 
-
+    /**
+     * Create the initial setup for the board
+     * Author: Rufus Raja (u6275198)
+     */
     public void setup() {
-        //check if the placement is valid and  make it visible
-
-    //    String sub[] = new String[placement.length() / 3];
         int rown = 0, coln = 0,col=5;
         Random r = new Random();
         int selector = r.nextInt(20);
         Image[][] grid = new Image[6][6];
-
-        Image[][] grid2 =
-                {
-                        {p.a0, p.a1, p.a2, p.a3, p.a4, p.a5, p.a6, p.a7},
-                        {p.b0, p.b1, p.b2, p.b3, p.b4, p.b5, p.b6},
-                        {p.c0, p.c1, p.c2, p.c3, p.c4, p.c5},
-                        {p.d0, p.d1, p.d2, p.d3, p.d4},
-                        {p.e0, p.e1, p.e2, p.e3},
-                        {p.f0, p.f1, p.f2},
-                        {p.g0, p.g1},
-                        {p.z9}
-                };
-
         placement1 = PLACEMENTS[selector];
         String [] sub = substr(placement1,3);
         scores1.setText(" ");
         scores2.setText(" ");
         scores3.setText(" ");
         scores4.setText(" ");
+        /*Loop through and check the positions for each image and store them to the image array*/
         for (int y = 0; y < sub.length; y++) {
             if (sub[y].charAt(0) == 'z') {
                 rown = 7;
@@ -976,8 +884,6 @@ public class Game extends Application {
                 int row = (sub[y].charAt(2) % 52);
                 grid[row][col-5] = grid2[rown][coln];
             }
-
-
         }
         gridPane.setHgap(2);
         gridPane.setVgap(2);
@@ -994,6 +900,10 @@ public class Game extends Application {
     }
 
 
+    /**
+     * Method to carry out the next step after a player or the bot has selected a position to move to
+     * Authors: Rufus Raja (u6275198), Songtuan Lin (u6162630)
+     */
     public void nextStep() {
         String move = "z9"+getMove;
         boolean isEnd = true;
@@ -1002,26 +912,17 @@ public class Game extends Application {
             if (check) {
                 boardMatrix = oneMove(move.charAt(2), placement1, boardMatrix);
                 placement1 = matrixToString(boardMatrix);
-                System.out.println("String placement " + placement1);
                 gridPane.getChildren().clear();
-                System.out.println("Placement before the move " + placement1);
                 boolean val = isPlacementWellFormed(placement1);
                 if (val) {
                     makePlacement(placement1);
                 } else
                     exit();
                 moveSequence = moveSequence + getMove;
-    /*            if(player >= (num_players-1))
-                {
-                    player = 0;
-                }
-                else
-                player = player+1;
-    */
-     //           System.out.println("This was player:"+(player+1)+" move");
                 int score1,score2,score3,score4;
                 score1=score2=score3=score4=0;
                 flag = getFlags(setup, moveSequence, num_players);
+                /*Counts the number of flags and cards for a player*/
                 for (int i = 0; i < flag.length; i++) {
                     if (flag[i] == -1) {
                         roundGains[i] = " ";
@@ -1044,6 +945,7 @@ public class Game extends Application {
                     }
                 }
 
+                /*Displays the scores for each player*/
                 if(score1 != 0){
                     scores1.setText(" "+Integer.toString(score1));
                     cards1.setText(" "+Integer.toString(cardCount[0]));
@@ -1074,13 +976,17 @@ public class Game extends Application {
         }
         else
             check = false;
+
+        /*Check if there are any legal moves, if there are then continue game, else set the game for end sequence*/
         for(int y=0;y<c.length;y++)
             if(isMoveLegal(placement1,c[y]))
                 isEnd = false;
 
+        /*If the game is still going on, keep the music playing*/
         if(!isEnd && !scene2player.isPlaying())
             scene2player.play();
 
+        /*If the game end has been reached, start the winner declaration process*/
         if(isEnd == true) {
             winner();
             botPlay = false;
@@ -1088,6 +994,12 @@ public class Game extends Application {
 
     }
 
+    /**
+     * Counts the number of cards based on the player ID
+     * @param id
+     * @return
+     * Author: Rufus Raja (u6275198)
+     */
     private int numOfCards(int id) {
         String supporters = getSupporters(setup,moveSequence,num_players,id);
         String numofcards[] = new String[supporters.length()];
@@ -1095,6 +1007,13 @@ public class Game extends Application {
         return numofcards.length;
     }
 
+    /**
+     * Advanced AI search for best move available
+     * @param placement
+     * @param boardState
+     * @return
+     * Author: Songtuan Lin (u6162630)
+     */
     char alpha_beta_search(String placement, String[][] boardState)
     {
         List<Character> moveList = WarringStatesGame.LegalMoves(placement);
@@ -1124,6 +1043,18 @@ public class Game extends Application {
         return nextMove;
     }
 
+    /**
+     * Returns the minimum value based on the minimax algorithm
+     * @param placement
+     * @param boardState
+     * @param oldMoveSequence
+     * @param alpha
+     * @param beta
+     * @param deep
+     * @param limit
+     * @return
+     * Author: Songtuan Lin (u6162630)
+     */
     int min_value(String placement, String[][] boardState, String oldMoveSequence, int alpha, int beta, int deep, boolean limit)
     {
         int minValue = 1000;
@@ -1156,6 +1087,18 @@ public class Game extends Application {
         return minValue;
     }
 
+    /**
+     * Return the max value based on the minimax algorithm
+     * @param placement
+     * @param boardState
+     * @param oldMovesequence
+     * @param alpha
+     * @param beta
+     * @param deep
+     * @param limit
+     * @return
+     * Author: Songtuan Lin (u6162630)
+     */
     int max_value(String placement, String[][] boardState, String oldMovesequence, int alpha, int beta, int deep, boolean limit)
     {
         int maxValue = -1000;
@@ -1188,6 +1131,12 @@ public class Game extends Application {
         return maxValue;
     }
 
+    /**
+     * Checks the results based on the movesequence
+     * @param moveSequence
+     * @return
+     * Author: Songtuan Lin (u6162630)
+     */
     int getUtility(String moveSequence)
     {
         int flag[] = WarringStatesGame.getFlags(this.setup, moveSequence, 2);

@@ -26,13 +26,15 @@ public class WarringStatesGame {
      */
       static boolean isCardPlacementWellFormed(String cardPlacement) {
         // FIXME Task 2: determine whether a card placement is well-formed
+          //check the length is 3
         if(cardPlacement.length()!=3){
             return false;
         }
+        // check the first character is in range
         if( ! ( ( cardPlacement.charAt(0)>='a'&& cardPlacement.charAt(0)<='g') || ( cardPlacement.charAt(0)=='z') )  ){
             return false;
         }
-
+        // check the second character is in range
         switch(cardPlacement.charAt(0)){
                 case 'a':
                     if(cardPlacement.charAt(1)< '0' ||cardPlacement.charAt(1)>'7'){
@@ -75,7 +77,7 @@ public class WarringStatesGame {
                     }
                     break;
             }
-
+            // check the Location character is in range
         if(! ( (cardPlacement.charAt(2)>='A'&& cardPlacement.charAt(2)<='Z') ||(cardPlacement.charAt(2)>='0'&& cardPlacement.charAt(2)<='9') )  ){
                 return false;
             }
@@ -101,10 +103,11 @@ public class WarringStatesGame {
      */
     public static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
+        //avoid null pointer exception and make sure the length is qualified
         if(placement==null||placement.equals("")||placement.length()%3!=0||placement.length()/3<1 || placement.length()/3>36){
             return false;
         }
-
+        //check each card is well formed and no same cards
         for(int i=0;i<placement.length();i+=3) {
             if (!isCardPlacementWellFormed(placement.substring(i,i+3))){
                 return false;
@@ -144,6 +147,7 @@ public class WarringStatesGame {
      * @param placement    the current placement string
      * @param locationChar a location for Zhang Yi to move to
      * @return true if Zhang Yi may move to that location
+     * Author: Garrick Lin
      */
     public static boolean isMoveLegal(String placement, char locationChar) {
         // FIXME Task 5: determine whether a given move is legal
@@ -325,6 +329,7 @@ public class WarringStatesGame {
      * @param setup        A placement string representing the board setup
      * @param moveSequence a string of location characters representing moves
      * @return True if the placement sequence is valid
+     * Author: Garrick Lin
      */
     public static boolean isMoveSequenceValid(String setup, String moveSequence) {
         // FIXME Task 6: determine whether a placement sequence is valid
@@ -458,6 +463,7 @@ public class WarringStatesGame {
      * @param numPlayers   the number of players in the game, must be in the range [2..4]
      * @param playerId     the player number for which to get the list of supporters, [0..(numPlayers-1)]
      * @return the list of supporters for the given player
+     * Arthor:Garrick Lin
      */
     public static String getSupporters(String setup, String moveSequence, int numPlayers, int playerId) {
         // FIXME Task 7: get the list of supporters for a given player after a sequence of moves
@@ -559,6 +565,7 @@ public class WarringStatesGame {
      * - element 5 contains the player ID of the player who controls the flag of Wei
      * - element 6 contains the player ID of the player who controls the flag of Yan
      * If no player controls a particular house, the element for that house will have the value -1.
+     * Author:Garrick Lin
      */
     public static int[] getFlags(String setup, String moveSequence, int numPlayers) {
         // FIXME Task 8: determine which player controls the flag of each kingdom after a given sequence of moves
@@ -641,6 +648,7 @@ public class WarringStatesGame {
      * If there is no legal move available, return the null character '\0'.
      * @param placement the current placement string
      * @return a location character representing Zhang Yi's destination for the move
+     * Arthor: Jiajia Xu
      */
     public static char generateMove(String placement) {
         // FIXME Task 10: generate a legal move
@@ -667,6 +675,8 @@ public class WarringStatesGame {
 
         return result;
     }
+
+
 
     public static int[][] getSupportersDetail(String setup, String moveSequence, int numPlayers)
     {
