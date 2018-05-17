@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 //import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import comp1110.ass2.Card;
 import java.util.*;
 import javafx.application.Application;
@@ -56,7 +57,7 @@ public class Game extends Application {
     private final Group controls = new Group();
     static int flag[] = new int[7];
     static int botFlag[][] = new int[7][7];
-    public int cardCount[] = new int[7];
+    public static int cardCount[] = new int[7];
     static String roundGains[] = new String[7];
     TextField textField,player1,player2,player3,player4;
     Label qinF  = new Label(" ");
@@ -562,11 +563,13 @@ public class Game extends Application {
         player2name.setTextFill(Color.WHITE);
         player3name.setTextFill(Color.WHITE);
         player4name.setTextFill(Color.WHITE);
+       // player1name.set
         VBox playernames = new VBox();
         player1 = new TextField();
         player2 = new TextField();
         player3 = new TextField();
         player4 = new TextField();
+   //     player1.set
     //    player1.setDisable(true);
         player2.setDisable(true);
         player3.setDisable(true);
@@ -578,6 +581,22 @@ public class Game extends Application {
         playernames.setLayoutX(465);
         playernames.setLayoutY(300);
         playernames.getChildren().addAll(player1,player2,player3,player4);
+        player1.setOnKeyTyped(event ->{
+            int maxCharacters = 8;
+            if(player1.getText().length() > maxCharacters) event.consume();
+        });
+        player2.setOnKeyTyped(event ->{
+            int maxCharacters = 8;
+            if(player2.getText().length() > maxCharacters) event.consume();
+        });
+        player3.setOnKeyTyped(event ->{
+            int maxCharacters = 8;
+            if(player3.getText().length() > maxCharacters) event.consume();
+        });
+        player4.setOnKeyTyped(event ->{
+            int maxCharacters = 8;
+            if(player4.getText().length() > maxCharacters) event.consume();
+        });
         playernames.setSpacing(20);
         player.setMaxSize(200,200);
     //    introroot.getChildren().add(startGame);
@@ -829,15 +848,31 @@ public class Game extends Application {
             playerSums[x] = WinnerSum(x);
         }
         int max = playerSums[0];
+        int maxcard;
         winner = 0;
         String winnername = " ";
         for(int x=0;x<playerSums.length;x++)
         {
-            if(playerSums[x] >= max)
+            if(playerSums[x] > max)
             {
                 max=playerSums[x];
                 winner= x;
 
+            }
+            if(playerSums[x] == max)
+            {
+                if(cardCount[x] > cardCount[winner]) {
+                    max = playerSums[x];
+                    winner = x;
+                }
+                if(cardCount[x] == cardCount[winner] && flag[0] == x)
+                {
+                    winner = x;
+                }
+                else
+                {
+                    continue;
+                }
             }
         }
   //      winner = winner;
