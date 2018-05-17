@@ -517,12 +517,6 @@ public class Game extends Application {
         yan.setTextFill(Color.WHITE);
         p1.setTextFill(Color.WHITE);
         p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
-
-
-
-
-
-    //    kingdoms.getChildren().addAll(qin,qi,chu,zhao,han,wei,yan);
         kingdoms.setSpacing(30);
         kingdoms.setLayoutX(750);
         kingdoms.setLayoutY(70);
@@ -563,14 +557,11 @@ public class Game extends Application {
         player2name.setTextFill(Color.WHITE);
         player3name.setTextFill(Color.WHITE);
         player4name.setTextFill(Color.WHITE);
-       // player1name.set
         VBox playernames = new VBox();
         player1 = new TextField();
         player2 = new TextField();
         player3 = new TextField();
         player4 = new TextField();
-   //     player1.set
-    //    player1.setDisable(true);
         player2.setDisable(true);
         player3.setDisable(true);
         player4.setDisable(true);
@@ -599,17 +590,14 @@ public class Game extends Application {
         });
         playernames.setSpacing(20);
         player.setMaxSize(200,200);
-    //    introroot.getChildren().add(startGame);
         introroot.getChildren().add(playernames);
         introroot.getChildren().add(playerLabels);
         root.getChildren().add(controls);
-   //     root.getChildren().add(kingdoms);
         root.getChildren().add(playerIDs);
         root.getChildren().add(flags);
         root.getChildren().add(winnerID);
         root.getChildren().add(test);
         root.getChildren().add(sounds);
-   //     root.getChildren().add(scoreLabels);
         root.getChildren().addAll(p1Score,p2Score,p3Score,p4Score);
         root.getChildren().add(scoreHead);
         root.getChildren().addAll(flagCount,cardCount);
@@ -618,9 +606,6 @@ public class Game extends Application {
         introroot.getChildren().add(player);
         introroot.getChildren().add(startGame);
         introroot.getChildren().add(help);
-   //     selection.getChildren().addAll(startGame);
-   //     selection.setSpacing(50);
-
 
         player.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -665,10 +650,6 @@ public class Game extends Application {
             public void handle(ActionEvent e) {
 
                 createGrid();
-
-
-
-
                 click1.play();
                 scene1player.stop();
                 lokiIntro.play();
@@ -753,16 +734,6 @@ public class Game extends Application {
                     }
                 });
 
-     /*           gridPane.getChildren().clear();
-                if(num_players == 1 || num_players == 2)
-                    playerIDs.getChildren().addAll(p1,p2);
-                else if(num_players == 3 )
-                    playerIDs.getChildren().addAll(p1,p2,p3);
-                else {
-                    System.out.println(num_players);
-                    playerIDs.getChildren().addAll(p1, p2, p3, p4);
-                }*/
-
                 playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
@@ -799,7 +770,6 @@ public class Game extends Application {
             }
         });
         makeControls();
-    //    primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setScene(intro);
         primaryStage.getIcons().add(new Image("/resource/comicwars.jpg"));
@@ -817,7 +787,6 @@ public class Game extends Application {
                 {"G","H","I","J","K","L"},
                 {"A","B","C","D","E","F"}
         };
-   //     GridPane pane = new GridPane();
         Label setupDisplay = new Label("Board Layout = ");
         setupDisplay.setLayoutX(740);
         setupDisplay.setLayoutY(610);
@@ -848,7 +817,6 @@ public class Game extends Application {
             playerSums[x] = WinnerSum(x);
         }
         int max = playerSums[0];
-        int maxcard;
         winner = 0;
         String winnername = " ";
         for(int x=0;x<playerSums.length;x++)
@@ -875,16 +843,8 @@ public class Game extends Application {
                 }
             }
         }
-  //      winner = winner;
         winnername = playerName[winner];
-        System.out.println("Winner ID:"+winner);
         String win = Integer.toString(winner);
-  /*      winnerID.setText("Player:"+win+" is the Winner!");
-        winnerID.resize(500,500);
-        winnerID.setStyle("-fx-font-weight: bold");
-        winnerID.setLayoutX(VIEWER_WIDTH/2-100);
-        winnerID.setLayoutY(VIEWER_HEIGHT/2-100);
-        winnerID.setTextFill(Color.RED); */
         Game end = new Game();
         test.setText("Player "+winnername+" is the Winner!");
         end.scene2player.setVolume(0.08);
@@ -916,7 +876,6 @@ public class Game extends Application {
     public void setup() {
         //check if the placement is valid and  make it visible
 
-    //    String sub[] = new String[placement.length() / 3];
         int rown = 0, coln = 0,col=5;
         Random r = new Random();
         int selector = r.nextInt(20);
@@ -1011,14 +970,6 @@ public class Game extends Application {
                 } else
                     exit();
                 moveSequence = moveSequence + getMove;
-    /*            if(player >= (num_players-1))
-                {
-                    player = 0;
-                }
-                else
-                player = player+1;
-    */
-     //           System.out.println("This was player:"+(player+1)+" move");
                 int score1,score2,score3,score4;
                 score1=score2=score3=score4=0;
                 flag = getFlags(setup, moveSequence, num_players);
