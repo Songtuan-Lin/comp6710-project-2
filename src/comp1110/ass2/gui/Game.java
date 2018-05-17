@@ -409,7 +409,6 @@ public class Game extends Application {
         cards2.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
         cards3.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
         cards4.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
-
         p1Score.getChildren().addAll(sp1,scores1,cards1);
         p2Score.getChildren().addAll(sp2,scores2,cards2);
         p3Score.getChildren().addAll(sp3,scores3,cards3);
@@ -675,6 +674,7 @@ public class Game extends Application {
                     primaryStage.setScene(intro);
                     }
                 });
+
                 playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
@@ -758,7 +758,6 @@ public class Game extends Application {
             playerSums[x] = WinnerSum(x);
         }
         int max = playerSums[0];
-        int maxcard;
         winner = 0;
         String winnername = " ";
         for(int x=0;x<playerSums.length;x++)
@@ -785,16 +784,8 @@ public class Game extends Application {
                 }
             }
         }
-  //      winner = winner;
         winnername = playerName[winner];
-        System.out.println("Winner ID:"+winner);
         String win = Integer.toString(winner);
-  /*      winnerID.setText("Player:"+win+" is the Winner!");
-        winnerID.resize(500,500);
-        winnerID.setStyle("-fx-font-weight: bold");
-        winnerID.setLayoutX(VIEWER_WIDTH/2-100);
-        winnerID.setLayoutY(VIEWER_HEIGHT/2-100);
-        winnerID.setTextFill(Color.RED); */
         Game end = new Game();
         test.setText("Player "+winnername+" is the Winner!");
         end.scene2player.setVolume(0.08);
@@ -826,7 +817,6 @@ public class Game extends Application {
     public void setup() {
         //check if the placement is valid and  make it visible
 
-    //    String sub[] = new String[placement.length() / 3];
         int rown = 0, coln = 0,col=5;
         Random r = new Random();
         int selector = r.nextInt(20);
@@ -921,14 +911,6 @@ public class Game extends Application {
                 } else
                     exit();
                 moveSequence = moveSequence + getMove;
-    /*            if(player >= (num_players-1))
-                {
-                    player = 0;
-                }
-                else
-                player = player+1;
-    */
-     //           System.out.println("This was player:"+(player+1)+" move");
                 int score1,score2,score3,score4;
                 score1=score2=score3=score4=0;
                 flag = getFlags(setup, moveSequence, num_players);
