@@ -890,12 +890,13 @@ public class Game extends Application {
         String nextState[][];
         String nextPlacement;
         int deep = 0;
-        int finalValue = -10;
+        int finalValue = -1000;
         int value;
-        int alpha = -10, beta = 10;
+        int alpha = -1000, beta = 1000; //the beta store the best score (the lowest value) that the most up min node which is current in calculating can get.
+        //the alpha store the best score (the highest value) that the most up max node which is current in calculating can get.
         char nextMove = 'A';
         boolean limit = true;
-        if(placement.length() < 72)
+        if(placement.length() < 54)
             limit = false;
         for(char move : moveList)
         {
@@ -914,14 +915,14 @@ public class Game extends Application {
 
     int min_value(String placement, String[][] boardState, String oldMoveSequence, int alpha, int beta, int deep, boolean limit)
     {
-        int minValue = 10;
+        int minValue = 1000;
         int value;
         List<Character> moveList = WarringStatesGame.LegalMoves(placement);
         String nextState[][];
         String nextPlacement;
         if(moveList.size() == 0)
             return getUtility(oldMoveSequence);
-        else if(deep > 12 && limit == true)
+        else if(deep > 8 && limit == true)
             return getUtility(oldMoveSequence);
         for(char move : moveList)
         {
@@ -930,6 +931,11 @@ public class Game extends Application {
             nextPlacement = WarringStatesGame.matrixToString(nextState);
             value = max_value(nextPlacement, nextState, newMovesequence, alpha, beta, deep + 1, limit);
             if(value <= alpha)
+                //if the one of the value (say y in this example) this min node get is smaller than the alpha
+                //then, the value domain of this node is [some value smaller than y]
+                //which means there is some better score for a upper max node can choose whose score is greater
+                //than y. As a result, the subtree that after this min node will not be choosed by the upper max
+                //node, the search after this node can be terminated.
                 return value;
             if(value < minValue)
                 minValue = value;
@@ -941,14 +947,14 @@ public class Game extends Application {
 
     int max_value(String placement, String[][] boardState, String oldMovesequence, int alpha, int beta, int deep, boolean limit)
     {
-        int maxValue = 10;
+        int maxValue = -1000;
         int value;
         List<Character> moveList = WarringStatesGame.LegalMoves(placement);
         String nextState[][];
         String nextPlacement;
         if(moveList.size() == 0)
             return getUtility(oldMovesequence);
-        else if(deep > 12 && limit == true)
+        else if(deep > 8 && limit == true)
             return getUtility(oldMovesequence);
         for(char move : moveList)
         {
@@ -957,6 +963,11 @@ public class Game extends Application {
             nextPlacement = WarringStatesGame.matrixToString(nextState);
             value = min_value(nextPlacement, nextState, newMovesequence, alpha, beta, deep + 1, limit);
             if(value >= beta)
+                //if the one of the value (say x in this example) this max node get is greater than the beta
+                //then, the value domain of this node is [x, some value greater than x]
+                //which means there is some better score for a upper min node can choose whose score is smaller
+                //than x. As a result, the subtree that after this max node will not be choosed by the upper min
+                //node, the search after this node can be terminated.
                 return value;
             if(value > maxValue)
                 maxValue = value;
@@ -969,19 +980,15 @@ public class Game extends Application {
     int getUtility(String moveSequence)
     {
         int flag[] = WarringStatesGame.getFlags(this.setup, moveSequence, 2);
-        int player1 = 0;
-        int player2 = 0;
+        int flagNumber = 0;
+        int cardNumber = 0;
+        int utility = 0;
         for(int i = 0; i < flag.length; i++)
-        {
-            if(flag[i] == 0)
-                player1++;
-            else if(flag[i] == 1)
-                player2++;
-        }
-        if(player2 >= player1)
-            return 1;
-        else
-            return -1;
+            if(flag[i] == 1)
+                flagNumber++;
+        cardNumber = WarringStatesGame.getSupporters(this.setup, moveSequence, 2, 1).length() / 3;
+        utility = flagNumber * 10 + cardNumber;
+        return utility;
     }
 
 
