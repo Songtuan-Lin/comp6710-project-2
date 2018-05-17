@@ -1,6 +1,6 @@
 package comp1110.ass2.gui;
 
-//import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import comp1110.ass2.Card;
 import java.util.*;
@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import java.util.Random;
 import comp1110.ass2.WarringStatesGame;
 
-//import jdk.nashorn.internal.runtime.Property;
+
 
 import static comp1110.ass2.WarringStatesGame.*;
 import static javafx.application.Platform.exit;
@@ -92,7 +92,7 @@ public class Game extends Application {
     AudioClip loki5 = new AudioClip(this.getClass().getResource("/resource/Loki5.wav").toString());
     AudioClip lokiEnding = new AudioClip(this.getClass().getResource("/resource/LokiEnding.wav").toString());
     AudioClip click2 = new AudioClip(this.getClass().getResource("/resource/clicksound.mp3").toString());
- //   Label scoreLabel[] = new Label[4];
+
     Label sp1 = new Label();
     Label sp2 = new Label();
     Label sp3 = new Label();
@@ -109,14 +109,7 @@ public class Game extends Application {
     Text cards4 = new Text();
 
     HBox scores = new HBox();
-/*    String scene1Music = "/resource/scene1.mp3";     // For example
-    String scene2Music = "/resource/scene2.mp3";
-    Media sound1 = new Media(new File(scene1Music).toURI().toString());
-    Media sound2 = new Media(new File(scene2Music).toURI().toString());
-    MediaPlayer mediaPlayer1 = new MediaPlayer(sound1);
-    MediaPlayer mediaPlayer2 = new MediaPlayer(sound2);
 
-*/
 
     static final String[] PLACEMENTS = {
             "g0Aa0Bf1Ca1Dc5Ee1Fa4Ge3He2Ia2Jc2Kd0Lf0Mb4Nd4Oa6Pc3Qe0Ra5Sc1Td1Uc4Vb5Wb0Xa7Yf2Zb10a31z92b33b64d35g16b27d28c09",
@@ -252,7 +245,7 @@ public class Game extends Application {
         label1.setTextFill(Color.WHITE);
         textField = new TextField();
         textField.setPrefWidth(150);
-   //     textField.se
+
         Button newGame = new Button("New Game");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -283,7 +276,6 @@ public class Game extends Application {
         HBox hb = new HBox();
         HBox hb1 = new HBox();
         hb.getChildren().addAll(label1, textField, button);
-    //    hb1.getChildren().add(newGame);
         hb1.setSpacing(10);
         hb1.setLayoutX(800);
         hb1.setLayoutY(50);
@@ -333,46 +325,12 @@ public class Game extends Application {
         {
             button.setDisable(true);
             textField.setDisable(true);
-       //     getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
-            getMove = BotMove()+"";
+            getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
             delay(2000, new Runnable(){ public void run(){ nextStep();} });
-      //      nextStep();
+
         }
         textField.clear();
-        if(playerName[1].equals("Omega(AI)") && check && botPlay)
-        {
-          //  advancedAI();
-        }
 
-    }
-
-    public void advancedAI()
-    {
-        /*
-        getMove = BotMove()+"";
-        botMoveSequence = botMoveSequence+getMove.charAt(0);
-//        botFlag[y] = getFlags(setup, moveSequence, 2);
-        int x=0;
-        char possible[] = new char[10];
-        for(int y=0;y<c[y];y++) {
-            if (isMoveLegal(placement1, c[y])) {
-                possible[x] = c[y];
-                x++;
-            }
-        }
-        for(int y=0;y<possible.length;y++)
-        {
-            botMoveSequence = botMoveSequence+possible[y];
-
-        }
-
-        button.setDisable(true);
-        textField.setDisable(true);
-        getMove = BotMove()+"";
-        int bestVal = Integer.MIN_VALUE;
-        delay(1000, new Runnable(){ public void run(){ nextStep();} });
-//                 nextStep();
-        */
     }
 
     public char BotMove()
@@ -403,8 +361,6 @@ public class Game extends Application {
         yanF.setTextFill(Color.WHITE.brighter());
         scoreLabels.setLayoutX(760);
         scoreLabels.setLayoutY(470);
- //       scores.setLayoutX(740);
- //       scores.setLayoutY(510);
         VBox p1Score = new VBox();
         VBox p2Score = new VBox();
         VBox p3Score = new VBox();
@@ -433,15 +389,7 @@ public class Game extends Application {
         flagCount.setFont(Font.font("Arial Black", FontWeight.BOLD, 10));
         cardCount.setTextFill(Color.WHITE);
         flagCount.setTextFill(Color.WHITE);
-/*        scores1.setLayoutX(765);
-        scores1.setLayoutY(505);
-        scores2.setLayoutX(827);
-        scores2.setLayoutY(505);
-        scores3.setLayoutX(890);
-        scores3.setLayoutY(505);
-        scores4.setLayoutX(948);
-        scores4.setLayoutY(505);
-  */    sp1.setTextFill(Color.WHITE.brighter());
+        sp1.setTextFill(Color.WHITE.brighter());
         sp2.setTextFill(Color.WHITE.brighter());
         sp3.setTextFill(Color.WHITE.brighter());
         sp4.setTextFill(Color.WHITE.brighter());
@@ -461,7 +409,7 @@ public class Game extends Application {
         cards2.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
         cards3.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
         cards4.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
-  //      scoreLabels.getChildren().addAll(sp1,sp2,sp3,sp4);
+
         p1Score.getChildren().addAll(sp1,scores1,cards1);
         p2Score.getChildren().addAll(sp2,scores2,cards2);
         p3Score.getChildren().addAll(sp3,scores3,cards3);
@@ -470,14 +418,10 @@ public class Game extends Application {
         p2Score.setSpacing(3);
         p3Score.setSpacing(3);
         p4Score.setSpacing(3);
-
-
         scoreLabels.setSpacing(20);
-   //     scores.getChildren().addAll(scores1,scores2,scores3,scores4);
         scores.setSpacing(60);
         gridPane.setLayoutX(100);
         gridPane.setLayoutY(10);
-     //   t = new Thread(sleeper);
         root.getChildren().add(gridPane);
 
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
@@ -485,9 +429,6 @@ public class Game extends Application {
         intro.getStylesheets().addAll(this.getClass().getResource("/resource/style.css").toExternalForm());
         Image img = new Image("/resource/z9_background.jpg");
         Image img2 = new Image("/resource/z10_background.jpg");
-      //  root.setBackground();
-      //  root.getChildren().add(bgImg);
-   //     introroot.setBackground(new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         introroot.setBackground(new Background(new BackgroundImage(img,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -517,12 +458,6 @@ public class Game extends Application {
         yan.setTextFill(Color.WHITE);
         p1.setTextFill(Color.WHITE);
         p1.setFont(Font.font("Arial Black", FontWeight.BOLD, 14));
-
-
-
-
-
-    //    kingdoms.getChildren().addAll(qin,qi,chu,zhao,han,wei,yan);
         kingdoms.setSpacing(30);
         kingdoms.setLayoutX(750);
         kingdoms.setLayoutY(70);
@@ -563,14 +498,12 @@ public class Game extends Application {
         player2name.setTextFill(Color.WHITE);
         player3name.setTextFill(Color.WHITE);
         player4name.setTextFill(Color.WHITE);
-       // player1name.set
+
         VBox playernames = new VBox();
         player1 = new TextField();
         player2 = new TextField();
         player3 = new TextField();
         player4 = new TextField();
-   //     player1.set
-    //    player1.setDisable(true);
         player2.setDisable(true);
         player3.setDisable(true);
         player4.setDisable(true);
@@ -599,17 +532,14 @@ public class Game extends Application {
         });
         playernames.setSpacing(20);
         player.setMaxSize(200,200);
-    //    introroot.getChildren().add(startGame);
         introroot.getChildren().add(playernames);
         introroot.getChildren().add(playerLabels);
         root.getChildren().add(controls);
-   //     root.getChildren().add(kingdoms);
         root.getChildren().add(playerIDs);
         root.getChildren().add(flags);
         root.getChildren().add(winnerID);
         root.getChildren().add(test);
         root.getChildren().add(sounds);
-   //     root.getChildren().add(scoreLabels);
         root.getChildren().addAll(p1Score,p2Score,p3Score,p4Score);
         root.getChildren().add(scoreHead);
         root.getChildren().addAll(flagCount,cardCount);
@@ -618,8 +548,6 @@ public class Game extends Application {
         introroot.getChildren().add(player);
         introroot.getChildren().add(startGame);
         introroot.getChildren().add(help);
-   //     selection.getChildren().addAll(startGame);
-   //     selection.setSpacing(50);
 
 
         player.setOnAction(new EventHandler<ActionEvent>() {
@@ -663,12 +591,7 @@ public class Game extends Application {
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-
                 createGrid();
-
-
-
-
                 click1.play();
                 scene1player.stop();
                 lokiIntro.play();
@@ -752,17 +675,6 @@ public class Game extends Application {
                     primaryStage.setScene(intro);
                     }
                 });
-
-     /*           gridPane.getChildren().clear();
-                if(num_players == 1 || num_players == 2)
-                    playerIDs.getChildren().addAll(p1,p2);
-                else if(num_players == 3 )
-                    playerIDs.getChildren().addAll(p1,p2,p3);
-                else {
-                    System.out.println(num_players);
-                    playerIDs.getChildren().addAll(p1, p2, p3, p4);
-                }*/
-
                 playerIDs.getChildren().addAll(p1);
                 setup();
                 textField.clear();
@@ -799,7 +711,6 @@ public class Game extends Application {
             }
         });
         makeControls();
-    //    primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setScene(intro);
         primaryStage.getIcons().add(new Image("/resource/comicwars.jpg"));
@@ -817,7 +728,6 @@ public class Game extends Application {
                 {"G","H","I","J","K","L"},
                 {"A","B","C","D","E","F"}
         };
-   //     GridPane pane = new GridPane();
         Label setupDisplay = new Label("Board Layout = ");
         setupDisplay.setLayoutX(740);
         setupDisplay.setLayoutY(610);
