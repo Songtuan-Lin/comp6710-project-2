@@ -1,7 +1,7 @@
 package comp1110.ass2.gui;
 
 //import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+//import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import comp1110.ass2.Card;
 import java.util.*;
 import javafx.application.Application;
@@ -1107,14 +1107,14 @@ public class Game extends Application {
         //the alpha store the best score (the highest value) that the most up max node which is current in calculating can get.
         char nextMove = 'A';
         boolean limit = true;
-        if(placement.length() < 54)
+        if(placement.length() < 66)
             limit = false;
         for(char move : moveList)
         {
             String newMovesequence = this.moveSequence + move;
             nextState = WarringStatesGame.oneMoveGame(move, placement, boardState);
             nextPlacement = WarringStatesGame.matrixToString(nextState);
-            value = max_value(nextPlacement, nextState, newMovesequence, alpha, beta, deep + 1, limit);
+            value = min_value(nextPlacement, nextState, newMovesequence, alpha, beta, deep + 1, limit);
             if(finalValue < value)
             {
                 finalValue = value;
@@ -1133,7 +1133,7 @@ public class Game extends Application {
         String nextPlacement;
         if(moveList.size() == 0)
             return getUtility(oldMoveSequence);
-        else if(deep > 7 && limit == true)
+        else if(deep > 8 && limit == true)
             return getUtility(oldMoveSequence);
         for(char move : moveList)
         {
@@ -1165,7 +1165,7 @@ public class Game extends Application {
         String nextPlacement;
         if(moveList.size() == 0)
             return getUtility(oldMovesequence);
-        else if(deep > 7 && limit == true)
+        else if(deep > 8 && limit == true)
             return getUtility(oldMovesequence);
         for(char move : moveList)
         {
@@ -1197,7 +1197,7 @@ public class Game extends Application {
         for(int i = 0; i < flag.length; i++)
             if(flag[i] == 1)
                 flagNumber++;
-        cardNumber = WarringStatesGame.getSupporters(this.setup, moveSequence, 2, 1).length() / 3;
+        cardNumber = WarringStatesGame.getSupporters(this.setup, moveSequence, 2, 1).length() / 2;
         utility = flagNumber * 10 + cardNumber;
         return utility;
     }
