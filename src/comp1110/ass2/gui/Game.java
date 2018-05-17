@@ -332,8 +332,8 @@ public class Game extends Application {
         {
             button.setDisable(true);
             textField.setDisable(true);
-      //      getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
-            getMove = BotMove()+"";
+            getMove = alpha_beta_search(placement1, boardMatrix) + "";//BotMove()+"";
+            //getMove = BotMove()+"";
             delay(1000, new Runnable(){ public void run(){ nextStep();} });
             //nextStep();
         }
