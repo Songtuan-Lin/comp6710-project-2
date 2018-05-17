@@ -700,7 +700,7 @@ public class Game extends Application {
             @Override
             public void handle(ActionEvent event) {
                 final Stage helpScreen = new Stage();
-                helpScreen.getIcons().add(new Image("/resource/comicwars.JPG"));
+                helpScreen.getIcons().add(new Image("/resource/comicwars.jpg"));
                 helpScreen.setResizable(false);
                 Image helpS = new Image("/resource/z11_background.jpg");
                 helpScreen.initModality(Modality.APPLICATION_MODAL);
