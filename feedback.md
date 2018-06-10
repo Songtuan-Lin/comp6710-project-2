@@ -6,7 +6,7 @@
 Well done!! A nice multiplayer game;)
 Interesting way to play the game, though it's a little bit difficult to play
 Supporters not displayed
-Code written for AI, but not implemented in game...
+Only 1 AI player and option
 Good OO features demonstrated, code can be more concise by finding the pattern and eliminating repetitive code
 Would be better if provide authorship and javadoc on each class created
 Extensions: background music(although it turned back on after turned off(?)), game instruction
@@ -14,7 +14,7 @@ Very interesting theme;)
 
 ## Mark
 
-**  9.15/11.0**
+**  9.4/11.0**
 
 ## Miscellaneous marks
 
@@ -30,12 +30,12 @@ Very interesting theme;)
 |CR|Comments clear and sufficient       | .4/.5  |
 |CR|Coding style good                   | .25/.25 |
 |CR|Appropriate use of JUnit tests      | .5/.5  |
-|D|Design and code of very high quality | .15/.25 |
+|D|Design and code of very high quality | /.25 |
 |D|Demonstrates interesting extensions  | .25/.25 |
 |D|Works well and easy to run           | .2/.25 |
 |HD|Game is exceptional                 | /.5  |
 
-**Total for miscellaneous marks:**  4.25/5.25
+**Total for miscellaneous marks:**  4.1/5.25
 
 ## Game marks (manual)
 
@@ -45,10 +45,10 @@ Very interesting theme;)
 |CR|Only valid moves allowed         | .25/.25 |
 |CR|Flags and supporters displayed   | .15/.25 |
 |CR|End of game indicates winner     | .25/.25 |
-|D |Basic computer opponent          | /.25 |
-|HD|Advanced computer opponent       | /.5  |
+|D |Basic computer opponent          | .25/.25 |
+|HD|Advanced computer opponent       | .15/.5  |
 
-**Total for manual marks:** 0.9/1.75
+**Total for manual marks:** 1.3/1.75
 
 ## Test results
 
